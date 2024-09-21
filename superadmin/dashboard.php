@@ -1,10 +1,13 @@
 <?php
 session_start();
-if (isset($_SESSION['username'])) {
-    header('Location: ../superadmin/login_form.php'); // Redirect to login if not logged in
+
+// Check if the user is logged in by verifying the session
+if (!isset($_SESSION['username'])) {
+    header('Location: ../superadmin/login_form.php'); // Redirect to login page if not logged in
     exit;
 }
 ?>
+
 <?php
 include '../includes/db.php';
 include '../includes/header.php';

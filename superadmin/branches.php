@@ -1,5 +1,12 @@
 <?php
 session_start();
+if (!isset($_SESSION['username'])) {
+    header('Location: ../superadmin/login_form.php'); // Redirect to login if not logged in
+    exit;
+}
+?>
+<?php
+
 include '../includes/db.php'; // Include database connection
 
 // Number of records per page
@@ -176,8 +183,7 @@ $total_pages = ceil($total_records / $records_per_page);
                 <h5 class="modal-title" id="importModalLabel">Import CSV</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="importCSVForm" enctype="multipart/form-data" method="POST"
-                action="../csv/import_branches.php">
+            <form id="importCSVForm" enctype="multipart/form-data" method="POST" action="../csv/import_branches.php">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="csvFile" class="form-label">Choose CSV file</label>

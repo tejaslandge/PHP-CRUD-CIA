@@ -1,4 +1,10 @@
-
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header('Location: ../superadmin/login_form.php'); // Redirect to login if not logged in
+    exit;
+}
+?>
 <?php
 include '../includes/db.php';
 include '../includes/header.php';
@@ -26,13 +32,7 @@ if (isset($_GET['id'])) {
     exit;
 }
 ?>
-<?php
-session_start();
-if (isset($_SESSION['username'])) {
-    header('Location: ../superadmin/login_form.php'); // Redirect to login if not logged in
-    exit;
-}
-?>
+
 
 <!-- Dashboard Container -->
 <div class="container-fluid">

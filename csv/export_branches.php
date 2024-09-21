@@ -1,4 +1,11 @@
 <?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header('Location: ../superadmin/login_form.php'); // Redirect to login if not logged in
+    exit;
+}
+?>
+<?php
 include '../includes/db.php'; 
 
 header('Content-Type: text/csv; charset=utf-8');
