@@ -79,7 +79,7 @@ $result = mysqli_query($conn, $sql);
                                          <a href="../edit/edit_trainer.php?id=' . $row['trainer_id'] . '">
                                                 <button class="btn btn-secondary fas fa-edit"></button>
                                         </a>
-                                        <a href="../delete/delete_trainer.php?id=' . $row['trainer_id'] . '" onclick="return confirm(\'Are you sure you want to delete this branch?\');">
+                                        <a href="../delete/delete_trainer.php?id=' . $row['trainer_id'] . '" onclick="return confirm(\'Are you sure you want to delete this ' . $row['first_name'] ." ".$row['last_name'] . '?\');">
                                                 <button class="btn btn-danger fas fa-trash-alt"></button>
                                         </a>
                                 </td>';

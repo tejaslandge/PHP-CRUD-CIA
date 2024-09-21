@@ -53,14 +53,21 @@
                         <a class="nav-link active" aria-current="page" href="../superadmin/feedbacks.php">Feedback</a>
                     </li>
                 </ul>
-                <form class="d-flex ms-1 mt-3" role="search" >
-                    <input class="form-control me-4" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
+                
 
-                <a href="../superadmin/logout.php"><button id="logout-button" class="logout-btn btn btn-danger ms-3 mt-0">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button></a>
+                <!-- Profile Icon and Dropdown -->
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user"></i> Profile
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item" href="../superadmin/my_profile.php">My Profile</a></li>
+                        <li><a class="dropdown-item" href="../superadmin/logout.php">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
 
             </div>
         </div>

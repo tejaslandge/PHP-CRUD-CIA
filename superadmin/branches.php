@@ -130,7 +130,7 @@ $total_pages = ceil($total_records / $records_per_page);
                                     <a href="../edit/edit_branch.php?id=' . $row['branch_id'] . '">
                                         <button class="btn btn-secondary fas fa-edit"></button>
                                     </a>
-                                    <a href="../delete/delete_branch.php?id=' . $row['branch_id'] . '" onclick="return confirm(\'Are you sure you want to delete this branch?\');">
+                                    <a href="../delete/delete_branch.php?id=' . $row['branch_id'] . '" onclick="return confirm(\'Are you sure you want to delete this ' . $row['branch_name'].'?\');">
                                         <button class="btn btn-danger fas fa-trash-alt"></button>
                                     </a>
                                 </td>';

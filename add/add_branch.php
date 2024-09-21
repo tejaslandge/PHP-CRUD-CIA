@@ -22,6 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $status = $_POST['status'];
     $total_employees = $_POST['total_employees'];
 
+    if($branch_name!=""&& $branch_address!=""&& $city !=""&& $state!=""&& $contact_number!=""&& $email!=""&& $date_established!=""&& $status!=""&& $total_employees!= "") {
+
     // Insert the new branch details into the database
     $sql_insert = "INSERT INTO branches (branch_name, branch_address, city, state, contact_number, email, branch_manager, date_established, status, total_employees) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt_insert = $conn->prepare($sql_insert);
@@ -33,6 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         echo "Error adding branch: " . $conn->error;
     }
+} else {
+    echo "<script>alert('Please fill out all the fields.!')</script>";
+}
 }
 ?>
 
@@ -61,7 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="branch_name" class="form-label">Branch Name</label>
-                            <input type="text" maxlength="30" class="form-control" id="branch_name" name="branch_name" required>
+                            <input type="text" maxlength="30" class="form-control" id="branch_name" name="branch_name"
+                                required>
 
                         </div>
                         <div class="col-md-6">
@@ -128,8 +134,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                         <div class="col-md-6">
                             <label for="contact_number" class="form-label">Contact Number</label>
-                            <input type="tel"  class="form-control" id="contact_number" name="contact_number" pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number" maxlength="10" required>
-
+                            <input type="tel" class="form-control" id="contact_number" name="contact_number"
+                                pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number" maxlength="10"
+                                inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
                         </div>
                         <div class="col-md-6">
 
@@ -215,9 +222,7 @@ include '../includes/footer.php';
         "West Bengal": ["Alipurduar", "Bankura", "Birbhum", "Cooch Behar", "Dakshin Dinajpur", "Darjeeling", "Hooghly", "Howrah", "Jalpaiguri", "Jhargram", "Kalimpong", "Kolkata", "Malda", "Murshidabad"]
     };
 
-    // Add more states or modify as per your requirement.
-
-
+   
 
     // Get references to the state and district dropdowns
     const stateSelect = document.getElementById('state');

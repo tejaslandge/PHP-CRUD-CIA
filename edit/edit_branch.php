@@ -131,8 +131,10 @@ if (isset($_GET['id'])) {
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="contact_number" class="form-label">Contact Number</label>
-                            <input type="text" class="form-control" id="contact_number" name="contact_number"
-                                value="<?php echo htmlspecialchars($branch['contact_number']); ?>" required>
+                            <input type="tel" class="form-control" id="contact_number" name="contact_number"
+                                pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number" maxlength="10"
+                                inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required
+                                value="<?php echo htmlspecialchars($branch['contact_number']); ?>" >
                         </div>
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email</label>

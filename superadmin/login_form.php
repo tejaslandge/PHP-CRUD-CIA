@@ -2,11 +2,10 @@
 session_start(); // Start session
 
 // Include database connection
-
-$servername = "localhost"; // your server name
-$username = "root"; // your database username
-$password = ""; // your database password
-$dbname = "ciadb2"; // your database name
+$servername = "localhost";
+$username = "root"; 
+$password = ""; 
+$dbname = "ciadb2"; 
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -16,32 +15,36 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $input = $_POST['username']; // Can be username or email
+    $input = $_POST['username']; 
     $password = $_POST['password'];
+    
+    if ($input != "" && $password != "") { 
+        // Prepare and bind
+        $stmt = $conn->prepare("SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?");
+        $stmt->bind_param("sss", $input, $input, $password);
 
-    // Prepare and bind
-    $stmt = $conn->prepare("SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?");
-    $stmt->bind_param("sss", $input, $input, $password);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        // User found
-        $_SESSION['loggedin'] = true;
-        $_SESSION['username'] = $input; // or any other user info
-        header("Location:../superadmin/dashboard.php"); // Redirect to a welcome page
-        exit;
+        if ($result->num_rows > 0) {
+            // User found
+            $_SESSION['loggedin'] = true;
+            $_SESSION['username'] = $input; 
+            header("Location: ../superadmin/dashboard.php"); 
+            exit;
+        } else {
+            $error="Invalid username/email or password.";
+        }
     } else {
-        echo "Invalid username/email or password.";
+        echo "<script>alert('Please fill both the Username and Password fields');</script>";
     }
 
     $stmt->close();
 }
 $conn->close();
 ?>
+
 
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -57,13 +60,15 @@ $conn->close();
         <form method="POST" class="mt-4">
             <div class="mb-3">
                 <label for="username" class="form-label">Username or Email</label>
-                <input type="text" class="form-control" name="username" id="username" placeholder="Enter username or email" required>
+                <input type="text" class="form-control" name="username" id="username"
+                    placeholder="Enter username or email" required>
             </div>
 
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <div class="input-group">
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Enter password" required>
+                    <input type="password" class="form-control" name="password" id="password"
+                        placeholder="Enter password" required>
                     <span class="input-group-text" id="togglePassword">
                         <i class="fas fa-eye"></i>
                     </span>
@@ -126,4 +131,3 @@ $conn->close();
         this.querySelector('i').classList.toggle('fa-eye-slash');
     });
 </script>
-
