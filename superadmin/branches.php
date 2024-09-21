@@ -1,11 +1,18 @@
 <?php
 session_start();
-
-
 include '../includes/db.php'; // Include database connection
 
-// Initialize the query for fetching all branches or search results
-$sql = "SELECT * FROM branches ORDER BY branch_id DESC";
+// Number of records per page
+$records_per_page = 5;
+
+// Get the current page number from the URL or set to 1 by default
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
+
+// Calculate the offset for SQL query
+$offset = ($page - 1) * $records_per_page;
+
+// Initialize the query for fetching branches with pagination
+$sql = "SELECT * FROM branches ORDER BY branch_id DESC LIMIT $records_per_page OFFSET $offset";
 
 // Check if a search has been submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['search_query'])) {
@@ -14,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['search_query'])) {
     // Protect against SQL injection
     $search_query = $conn->real_escape_string($search_query);
 
-    // Modify the query to search across relevant columns
+    // Modify the query to search across relevant columns with pagination
     $sql = "SELECT * FROM branches WHERE 
             branch_name LIKE '%$search_query%' OR 
             branch_address LIKE '%$search_query%' OR 
@@ -23,13 +30,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['search_query'])) {
             contact_number LIKE '%$search_query%' OR 
             email LIKE '%$search_query%' OR 
             branch_manager LIKE '%$search_query%' OR 
-            status LIKE '%$search_query%'";
+            status LIKE '%$search_query%' 
+            ORDER BY branch_id DESC LIMIT $records_per_page OFFSET $offset";
 }
 
 // Execute the query
 $result = mysqli_query($conn, $sql);
 
+// Get the total number of records
+$total_result = mysqli_query($conn, "SELECT COUNT(*) as total FROM branches");
+$total_records = mysqli_fetch_assoc($total_result)['total'];
+
+// Calculate total pages
+$total_pages = ceil($total_records / $records_per_page);
+
 ?>
+
 
 <div style="position: sticky; top:0;">
     <?php include '../includes/header.php'; ?>
@@ -45,17 +61,19 @@ $result = mysqli_query($conn, $sql);
 
         <!-- Main content -->
         <main class="col-12 col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <div
+                class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Branches</h1>
                 <a href="../add/add_branch.php" class="btn btn-primary mb-2">Add New Branch</a>
             </div>
 
             <!-- Search form -->
             <form id="searchForm">
-    <div class="form-group d-flex">
-        <input type="text" id="searchQuery" name="search_query" class="form-control" placeholder="Search by branch name, city, state, etc.">
-    </div>
-</form>
+                <div class="form-group d-flex">
+                    <input type="text" id="searchQuery" name="search_query" class="form-control"
+                        placeholder="Search by branch name, city, state, etc.">
+                </div>
+            </form>
 
             <!-- Table of branches -->
             <div class="table-responsive" id="branchResults">
@@ -108,6 +126,34 @@ $result = mysqli_query($conn, $sql);
                         ?>
                     </tbody>
                 </table>
+                <!-- Pagination -->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <?php if ($page > 1): ?>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<?php echo $page - 1; ?>" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+
+                        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                            <li class="page-item <?php if ($i == $page)
+                                echo 'active'; ?>">
+                                <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                            </li>
+                        <?php endfor; ?>
+
+                        <?php if ($page < $total_pages): ?>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<?php echo $page + 1; ?>" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                    </ul>
+                </nav>
+
             </div>
         </main>
     </div>
@@ -119,19 +165,19 @@ include '../includes/footer.php';
 ?>
 
 <script>
-$(document).ready(function() {
-    // Trigger search as the user types in the search box
-    $('#searchQuery').on('keyup', function() {
+
+    $(document).ready(function () {
+    $('#searchQuery').on('keyup', function () {
         var query = $(this).val();
         $.ajax({
-            url: "../superadmin/fetch_branches.php", // Separate PHP script for fetching branch data
+            url: "../superadmin/fetch_branches.php",
             method: "POST",
             data: { search_query: query },
-            success: function(data) {
-                // Update the table with the search results
+            success: function (data) {
                 $('#branchResults').html(data);
             }
         });
     });
 });
+
 </script>

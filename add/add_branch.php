@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="branch_name" class="form-label">Branch Name</label>
-                            <input type="text" class="form-control" id="branch_name" name="branch_name" required>
+                            <input type="text" maxlength="30" class="form-control" id="branch_name" name="branch_name" required>
 
                         </div>
                         <div class="col-md-6">
@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                         <div class="col-md-6">
                             <label for="contact_number" class="form-label">Contact Number</label>
-                            <input type="text" class="form-control" id="contact_number" name="contact_number" required>
+                            <input type="tel"  class="form-control" id="contact_number" name="contact_number" pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number" maxlength="10" required>
 
                         </div>
                         <div class="col-md-6">
