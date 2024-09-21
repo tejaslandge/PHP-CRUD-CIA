@@ -63,9 +63,19 @@ $total_pages = ceil($total_records / $records_per_page);
         <main class="col-12 col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div
                 class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Branches</h1>
+                <h2>Branches</h2>
+                <div>
+                    <a href="#" class="btn btn-outline-success mb-2 me-2" id="exportCSV">
+                        <i class="fas fa-file-csv"></i> Export CSV
+                    </a>
+                    <a href="#" class="btn btn-outline-primary mb-2" data-bs-toggle="modal"
+                        data-bs-target="#importModal">
+                        <i class="fas fa-upload"></i> Import CSV
+                    </a>
+                </div>
                 <a href="../add/add_branch.php" class="btn btn-primary mb-2">Add New Branch</a>
             </div>
+
 
             <!-- Search form -->
             <form id="searchForm">
@@ -158,6 +168,30 @@ $total_pages = ceil($total_records / $records_per_page);
         </main>
     </div>
 </div>
+<!-- Import CSV Modal -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importModalLabel">Import CSV</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="importCSVForm" enctype="multipart/form-data" method="POST"
+                action="../csv/import_branches.php">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="csvFile" class="form-label">Choose CSV file</label>
+                        <input type="file" class="form-control" id="csvFile" name="csvFile" accept=".csv" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <?php
 mysqli_close($conn);
@@ -167,17 +201,22 @@ include '../includes/footer.php';
 <script>
 
     $(document).ready(function () {
-    $('#searchQuery').on('keyup', function () {
-        var query = $(this).val();
-        $.ajax({
-            url: "../superadmin/fetch_branches.php",
-            method: "POST",
-            data: { search_query: query },
-            success: function (data) {
-                $('#branchResults').html(data);
-            }
+        $('#searchQuery').on('keyup', function () {
+            var query = $(this).val();
+            $.ajax({
+                url: "../superadmin/fetch_branches.php",
+                method: "POST",
+                data: { search_query: query },
+                success: function (data) {
+                    $('#branchResults').html(data);
+                }
+            });
         });
     });
-});
+
+
+    document.getElementById('exportCSV').addEventListener('click', function () {
+        window.location.href = "../csv/export_branches.php";
+    });
 
 </script>
