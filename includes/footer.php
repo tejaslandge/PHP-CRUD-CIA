@@ -2,26 +2,20 @@
     <div class="container">
         <div class="row">
             <!-- About section -->
-            <div class="col-md-3 mb-2">
+            <div class="col-md-3 mb-2 mt-3">
                 <h5 class="text-uppercase">Code Insight Academy</h5>
                 <p>Unlocking Potential, One Code at a Time</p>
             </div>
 
-            <!-- Useful Links -->
-            <div class="col-md-3 mb-2">
-                <h5 class="text-uppercase">Useful Links</h5>
-                <ul class="list-unstyled">
-                    <li><a href="#" class="text-light">Home</a></li>
-                    <li><a href="#" class="text-light">About Us</a></li>
-                    <li><a href="#" class="text-light">Courses</a></li>
-                    <li><a href="#" class="text-light">Contact Us</a></li>
-                </ul>
-            </div>
+
 
             <!-- Contact Information -->
+            <div class="col-md-3 mb-2 mt-3">
+                <p><i class="fas fa-map-marker-alt"></i> Sonare House,vidyanagar , Mordern School, Koradi , Nagpur</p>
+            </div>
             <div class="col-md-3 mb-2">
                 <h5 class="text-uppercase">Contact Us</h5>
-                <p><i class="fas fa-map-marker-alt"></i> Sonare House,vidyanagar , Mordern School, Koradi , Nagpur</p>
+
                 <p><i class="fas fa-phone"></i> +91 9172 007 007</p>
                 <p><i class="fas fa-envelope"></i> codeinsightacademy@gmail.com</p>
             </div>

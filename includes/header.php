@@ -53,12 +53,12 @@
                         <a class="nav-link active" aria-current="page" href="../superadmin/feedbacks.php">Feedback</a>
                     </li>
                 </ul>
-                <form class="d-flex ms-1" role="search" >
+                <form class="d-flex ms-1 mt-3" role="search" >
                     <input class="form-control me-4" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
 
-                <a href="../superadmin/logout.php"><button id="logout-button" class="logout-btn btn btn-danger ms-4 mt-1">
+                <a href="../superadmin/logout.php"><button id="logout-button" class="logout-btn btn btn-danger ms-3 mt-0">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </button></a>
 
