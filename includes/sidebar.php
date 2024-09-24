@@ -39,7 +39,7 @@
         </li>
         <li>
             <a href="../superadmin/activity_log.php"style="margin-bottom: 20px;" class="nav-link">
-                <i class="bi bi-chat-left-text  "></i> Activity Log
+                <i class="bi bi-clipboard-data"></i> Activity Log
             </a>
         </li>
     </ul>
