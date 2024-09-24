@@ -9,6 +9,8 @@ if (!isset($_SESSION['username'])) {
 
 include '../includes/db.php';
 include '../includes/header.php';
+include 'log_activity.php';
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $course_name = $_POST['course_name'];

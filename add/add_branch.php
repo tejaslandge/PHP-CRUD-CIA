@@ -8,6 +8,8 @@ if (!isset($_SESSION['username'])) {
 <?php
 include '../includes/db.php';
 include '../includes/header.php';
+include 'log_activity.php';
+
 
 // Handle form submission to add a new branch
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

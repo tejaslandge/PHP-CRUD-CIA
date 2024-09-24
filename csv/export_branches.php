@@ -1,31 +1,54 @@
 <?php
-session_start();
-if (!isset($_SESSION['username'])) {
-    header('Location: ../superadmin/login_form.php'); // Redirect to login if not logged in
-    exit;
+include '../includes/db.php'; // Include database connection
+
+// Initialize the query for fetching branches
+$sql = "SELECT * FROM branches";
+
+// Check if a search query has been submitted
+if (isset($_GET['search_query']) && !empty($_GET['search_query'])) {
+    $search_query = $_GET['search_query'];
+    // Protect against SQL injection
+    $search_query = $conn->real_escape_string($search_query);
+
+
+    // Modify the query to search across relevant columns
+    $sql .= " WHERE 
+              branch_name LIKE '%$search_query%' OR 
+              branch_address LIKE '%$search_query%' OR 
+              city LIKE '%$search_query%' OR 
+              state LIKE '%$search_query%' OR 
+              contact_number LIKE '%$search_query%' OR 
+              email LIKE '%$search_query%' OR 
+              branch_manager LIKE '%$search_query%' OR 
+              status LIKE '%$search_query%'";
 }
-?>
-<?php
-include '../includes/db.php'; 
 
-header('Content-Type: text/csv; charset=utf-8');
-header('Content-Disposition: attachment; filename=branches.csv');
-
-// Open output stream
-$output = fopen('php://output', 'w');
-
-// Output column headings
-fputcsv($output, array('Branch ID', 'Branch Name', 'Branch Manager', 'Email', 'Contact Number', 'Status'));
-
-// Fetch the data
-$sql = "SELECT branch_id, branch_name, branch_manager, email, contact_number, status FROM branches";
+// Execute the query
 $result = mysqli_query($conn, $sql);
 
-while ($row = mysqli_fetch_assoc($result)) {
-    fputcsv($output, $row);
+// Check for query success
+if ($result) {
+    // Prepare CSV headers
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="branches.csv"');
+
+    // Open output stream
+    $output = fopen('php://output', 'w');
+
+    // Write CSV headers
+    fputcsv($output, ['Branch ID', 'Branch Name', 'Branch Manager', 'Email', 'Contact Number', 'Status']);
+
+    // Fetch and write each row to the CSV
+    while ($row = mysqli_fetch_assoc($result)) {
+        fputcsv($output, [$row['branch_id'], $row['branch_name'], $row['branch_manager'], $row['email'], $row['contact_number'], $row['status']]);
+    }
+
+    fclose($output);
+    exit; // Stop further execution
+} else {
+    // Handle query failure
+    echo "Error: " . mysqli_error($conn);
 }
 
-// Close the database connection
-fclose($output);
-exit();
+mysqli_close($conn);
 ?>

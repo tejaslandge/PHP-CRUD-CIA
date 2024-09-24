@@ -9,6 +9,8 @@ if (!isset($_SESSION['username'])) {
 
 include '../includes/db.php';
 include '../includes/header.php';
+include 'log_activity.php';
+
 
 $course_id = $_GET['id'];
 

@@ -10,8 +10,10 @@
 
 
             <!-- Contact Information -->
-            <div class="col-md-3 mb-2 mt-3">
-                <p><i class="fas fa-map-marker-alt"></i> Sonare House,vidyanagar , Mordern School, Koradi , Nagpur</p>
+            <div class="col-md-3 mb-2 mt-1">
+            <h5 class="text-uppercase">Head Office</h5>
+
+                <p><i class="fas fa-map-marker-alt"></i> Sonare House,vidyanagar , Modern School, Koradi , Nagpur</p>
             </div>
             <div class="col-md-3 mb-2">
                 <h5 class="text-uppercase">Contact Us</h5>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 21, 2024 at 06:58 AM
+-- Generation Time: Sep 24, 2024 at 04:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -20,6 +20,20 @@ SET time_zone = "+00:00";
 --
 -- Database: `ciadb2`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `activity_log`
+--
+
+CREATE TABLE `activity_log` (
+  `log_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `action` varchar(255) NOT NULL,
+  `log_time` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -48,7 +62,12 @@ CREATE TABLE `branches` (
 INSERT INTO `branches` (`branch_id`, `branch_name`, `branch_address`, `city`, `state`, `contact_number`, `email`, `branch_manager`, `date_established`, `status`, `total_employees`) VALUES
 (1, 'CIA Vidyanagar', 'Nagpur', 'Nagpur', 'Maharashtra', '07218420585', 'tejaslandge21@gmail.com', 'Jyoti Raut', '2024-09-01', 'active', 3),
 (3, 'CIA Sadar', 'Nagpur', 'Nagpur', 'Maharashtra', '07218420585', 'tejaslandge21@gmail.com', 'Tejas Landge', '2024-09-05', 'active', 4),
-(4, 'CIA Mumbai', 'Mumbai', 'Mumbai', 'Maharashtra', '07218420585', 'tejaslandge21@gmail.com', 'Harsh Patle', '2024-09-07', 'active', 5);
+(4, 'CIA Mumbai', 'Mumbai', 'Mumbai', 'Maharashtra', '07218420585', 'tejaslandge21@gmail.com', 'Harsh Patle', '2024-09-07', 'active', 5),
+(7, 'CIA Sadar', 'Nagpur', 'Nagpur', 'Maharashtra', '7218420585', 'tejaslandge21@gmail.com', 'Jyoti Raut', '2024-09-04', 'active', 32),
+(8, 'CIA Vidyanagar', 'Nagpur', 'East Kameng', 'Arunachal Pradesh', '7218420585', 'tejaslandge21@gmail.com', 'Harsh Patle', '2024-08-28', 'active', 6),
+(9, 'CIA Vidyanagar', NULL, NULL, NULL, '7218420585', 'tejaslandge21@gmail.com', 'Jyoti Raut', NULL, 'active', NULL),
+(11, 'CIA Mumbai', NULL, NULL, NULL, '7218420585', 'tejaslandge21@gmail.com', 'Harsh Patle', NULL, 'active', NULL),
+(13, 'CIA Sadar', NULL, NULL, NULL, '7218420585', 'tejaslandge21@gmail.com', 'Jyoti Raut', NULL, 'active', NULL);
 
 -- --------------------------------------------------------
 
@@ -191,19 +210,27 @@ CREATE TABLE `users` (
   `username` varchar(255) NOT NULL,
   `email` varchar(30) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `status` enum('active','inactive','pending') NOT NULL
+  `status` enum('active','inactive','pending') NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `status`) VALUES
-(1, 'tejaslandge', 'tejaslandge21@gmail.com', 'Tejas@123', 'active');
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `status`, `updated_at`) VALUES
+(1, 'tejaslandge', 'tejaslandge21@gmail.com', 'Tejas@123', 'active', '2024-09-24 08:29:03'),
+(2, 'admin', 'admin@gmail.com', '321', 'active', '2024-09-24 12:19:25');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `activity_log`
+--
+ALTER TABLE `activity_log`
+  ADD PRIMARY KEY (`log_id`);
 
 --
 -- Indexes for table `branches`
@@ -249,10 +276,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `activity_log`
+--
+ALTER TABLE `activity_log`
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `branches`
 --
 ALTER TABLE `branches`
-  MODIFY `branch_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `branch_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `courses`
@@ -282,7 +315,7 @@ ALTER TABLE `trainers`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables

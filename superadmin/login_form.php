@@ -1,49 +1,28 @@
 <?php
-session_start(); // Start session
+session_start();
+include '../includes/db.php'; 
+include 'log_activity.php';
 
-// Include database connection
-$servername = "localhost";
-$username = "root"; 
-$password = ""; 
-$dbname = "ciadb2"; 
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $input = $_POST['username']; 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'];
     $password = $_POST['password'];
-    
-    if ($input != "" && $password != "") { 
-        // Prepare and bind
-        $stmt = $conn->prepare("SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?");
-        $stmt->bind_param("sss", $input, $input, $password);
 
-        $stmt->execute();
-        $result = $stmt->get_result();
+    $query = "SELECT * FROM users WHERE (username = '$username' OR email = '$username')AND password = '$password' AND status = 'active'";
+    $result = mysqli_query($conn, $query);
 
-        if ($result->num_rows > 0) {
-            // User found
-            $_SESSION['loggedin'] = true;
-            $_SESSION['username'] = $input; 
-            header("Location: ../superadmin/dashboard.php"); 
-            exit;
-        } else {
-            $error="Invalid username/email or password.";
-        }
+    if (mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $_SESSION['user_id'] = $row['id']; // Store the user ID in the session
+        $_SESSION['username'] = $row['username']; // Store the username in the session
+        header('Location: ../superadmin/dashboard.php'); // Redirect to the profile page
+        exit();
     } else {
-        echo "<script>alert('Please fill both the Username and Password fields');</script>";
+        echo "Invalid login credentials";
     }
-
-    $stmt->close();
 }
-$conn->close();
 ?>
+
 
 
 <!-- Bootstrap CSS -->
@@ -59,9 +38,9 @@ $conn->close();
         <?php endif; ?>
         <form method="POST" class="mt-4">
             <div class="mb-3">
-                <label for="username" class="form-label">Username or Email</label>
+                <label for="username" class="form-label">Username</label>
                 <input type="text" class="form-control" name="username" id="username"
-                    placeholder="Enter username or email" required>
+                    placeholder="Enter username" required>
             </div>
 
             <div class="mb-3">

@@ -1,5 +1,7 @@
 <?php
 session_start();
+include 'log_activity.php';
+
 if (!isset($_SESSION['username'])) {
     header('Location: ../superadmin/login_form.php'); // Redirect to login if not logged in
     exit;
@@ -8,6 +10,8 @@ if (!isset($_SESSION['username'])) {
 <?php
 include '../includes/db.php';
 include '../includes/header.php';
+include 'log_activity.php';
+logActivity($_SESSION['user_id'], $_SESSION['username'], "Viewed Task Sheet");
 ?>
 
 <!-- Dashboard Container -->

@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+
 // Check if the user is logged in by verifying the session
 if (!isset($_SESSION['username'])) {
     header('Location: ../superadmin/login_form.php'); // Redirect to login page if not logged in
@@ -11,10 +12,12 @@ if (!isset($_SESSION['username'])) {
 <?php
 include '../includes/db.php';
 include '../includes/header.php';
-?>
-<!-- count all data From db -->
-<?php
-include '../includes/db.php';
+include 'log_activity.php';
+
+
+logActivity($_SESSION['user_id'], $_SESSION['username'], "Viewed dashboard");
+
+
 
 // SQL query to get the count of branches
 $sqlbranch = "SELECT COUNT(*) AS total FROM branches";

@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Insight Academy</title>
+    <link rel="icon" type="image" href="../assets/cia1.png" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -64,7 +65,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                         <li><a class="dropdown-item" href="../superadmin/my_profile.php">My Profile</a></li>
-                        <li><a class="dropdown-item" href="../superadmin/logout.php">Logout</a></li>
+                        <li><a class="dropdown-item" href="../superadmin/logout.php" style="color:red;">Logout</a></li>
                     </ul>
                 </li>
             </ul>

@@ -7,6 +7,8 @@ if (!isset($_SESSION['username'])) {
 ?>
 <?php
 include '../includes/db.php';
+include 'log_activity.php';
+
 
 // Check if branch_id is provided in the URL
 if (isset($_GET['id'])) {

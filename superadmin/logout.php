@@ -1,14 +1,16 @@
 <?php
-// Start the session
+// logout.php
+
 session_start();
+include '../superadmin/log_activity.php';
 
-// Unset all of the session variables
-$_SESSION = [];
+if (isset($_SESSION['user_id'])) {
+    // Log logout action
+    logActivity($_SESSION['user_id'], $_SESSION['username'], "User logged out");
 
-// Destroy the session
-session_destroy();
-
-// Redirect to the login page
-header('Location: ../superadmin/login_form.php'); // Redirect to login page
-exit();
+    // Destroy the session
+    session_destroy();
+    header("Location: ../superadmin/login_form.php");
+    exit();
+}
 ?>

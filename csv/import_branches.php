@@ -8,9 +8,13 @@ if (!isset($_SESSION['username'])) {
 <?php
 include '../includes/db.php';
 
+
+
 if (isset($_FILES['csvFile']) && $_FILES['csvFile']['error'] == 0) {
     $file = $_FILES['csvFile']['tmp_name'];
     
+
+
     // Open the CSV file
     $handle = fopen($file, 'r');
 

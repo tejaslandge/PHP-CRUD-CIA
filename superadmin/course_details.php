@@ -8,6 +8,8 @@ if (!isset($_SESSION['username'])) {
 <?php
 include '../includes/db.php';
 include '../includes/header.php';
+include 'log_activity.php';
+logActivity($_SESSION['user_id'], $_SESSION['username'], "Viewed Course Details");
 
 $course_id = $_GET['id'];
 
@@ -17,7 +19,7 @@ $result = mysqli_query($conn, $sql);
 $course = mysqli_fetch_assoc($result);
 
 ?>
-
+ 
 <div class="container">
     <h2>Course Details</h2>
     <table class="table table-bordered">

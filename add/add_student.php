@@ -8,6 +8,8 @@ if (!isset($_SESSION['username'])) {
 <?php
 // Include your database connection file
 include '../includes/db.php';
+include 'log_activity.php';
+
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

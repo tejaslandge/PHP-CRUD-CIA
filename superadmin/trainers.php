@@ -8,6 +8,9 @@ if (!isset($_SESSION['username'])) {
 <?php
 include '../includes/db.php';
 include '../includes/header.php';
+include 'log_activity.php';
+logActivity($_SESSION['user_id'], $_SESSION['username'], "Viewed Trainers Table");
+
 
 // Query to fetch data from the branches table
 $sql = "SELECT * FROM trainers";
@@ -31,12 +34,11 @@ $result = mysqli_query($conn, $sql);
             <div
                 class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Trainers</h1>
+                <a href="../add/add_trainer.php" class="btn btn-primary mb-2">Add New Trainer</a>
             </div>
             <!-- Dashboard Container -->
             <div class="row">
                 <div class="col-12">
-                    <h1>Trainer Details</h1>
-                    <a href="../add/add_trainer.php" class="btn btn-primary mb-2">Add New Trainer</a>
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered">
                             <thead class="table-dark">

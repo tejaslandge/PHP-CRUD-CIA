@@ -37,6 +37,11 @@
                 <i class="bi bi-chat-left-text  "></i> Feedback
             </a>
         </li>
+        <li>
+            <a href="../superadmin/activity_log.php"style="margin-bottom: 20px;" class="nav-link">
+                <i class="bi bi-chat-left-text  "></i> Activity Log
+            </a>
+        </li>
     </ul>
     <hr>
 </div>

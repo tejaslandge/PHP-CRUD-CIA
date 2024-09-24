@@ -8,6 +8,9 @@ if (!isset($_SESSION['username'])) {
 <?php
 
 include '../includes/db.php'; // Include database connection
+include 'log_activity.php';
+
+logActivity($_SESSION['user_id'], $_SESSION['username'], "Viewed Branches Table");
 
 // Number of records per page
 $records_per_page = 5;
@@ -51,6 +54,9 @@ $total_records = mysqli_fetch_assoc($total_result)['total'];
 // Calculate total pages
 $total_pages = ceil($total_records / $records_per_page);
 
+$ip = $_SERVER['REMOTE_ADDR'];
+// echo 'Hello'.$ip;
+error_log("========IP: $ip=============");
 ?>
 
 
@@ -130,7 +136,7 @@ $total_pages = ceil($total_records / $records_per_page);
                                     <a href="../edit/edit_branch.php?id=' . $row['branch_id'] . '">
                                         <button class="btn btn-secondary fas fa-edit"></button>
                                     </a>
-                                    <a href="../delete/delete_branch.php?id=' . $row['branch_id'] . '" onclick="return confirm(\'Are you sure you want to delete this ' . $row['branch_name'].'?\');">
+                                    <a href="../delete/delete_branch.php?id=' . $row['branch_id'] . '" onclick="return confirm(\'Are you sure you want to delete this ' . $row['branch_name'] . '?\');">
                                         <button class="btn btn-danger fas fa-trash-alt"></button>
                                     </a>
                                 </td>';
@@ -185,8 +191,14 @@ $total_pages = ceil($total_records / $records_per_page);
             </div>
             <form id="importCSVForm" enctype="multipart/form-data" method="POST" action="../csv/import_branches.php">
                 <div class="modal-body">
+                    <!-- Image to demonstrate the format -->
+                    <img src="../assets/dummy.jpg" alt="CSV format example" class="img-fluid mb-3" style="max-height: 300px; width: 100%; object-fit: cover;">
+
+                    <!-- CSV File input field -->
                     <div class="mb-3">
-                        <label for="csvFile" class="form-label">Choose CSV file</label>
+                        <label for="csvFile" class="form-label">
+                            Upload your CSV file (Ensure it follows the displayed format)
+                        </label>
                         <input type="file" class="form-control" id="csvFile" name="csvFile" accept=".csv" required>
                     </div>
                 </div>
@@ -198,6 +210,7 @@ $total_pages = ceil($total_records / $records_per_page);
         </div>
     </div>
 </div>
+
 
 <?php
 mysqli_close($conn);
@@ -213,16 +226,60 @@ include '../includes/footer.php';
                 url: "../superadmin/fetch_branches.php",
                 method: "POST",
                 data: { search_query: query },
+                dataType: 'json', // Expect JSON response
                 success: function (data) {
-                    $('#branchResults').html(data);
+                    // Clear the existing table body
+                    var tbody = $('#branchResults tbody');
+                    tbody.empty();
+
+                    // Check if data is not empty
+                    if (data.length > 0) {
+                        $.each(data, function (index, row) {
+                            var statusBadge = row.status === 'active' ?
+                                '<span class="badge bg-success">Active</span>' :
+                                '<span class="badge bg-danger">Inactive</span>';
+
+                            tbody.append(`
+                            <tr>
+                                <th scope="row">${index + 1}</th>
+                                <td>${row.branch_name}</td>
+                                <td>${row.branch_manager}</td>
+                                <td>${row.email}</td>
+                                <td>${row.contact_number}</td>
+                                <td>${statusBadge}</td>
+                                <td>
+                                    <a href="branch_details.php?id=${row.branch_id}">
+                                        <button class="btn btn-warning fas fa-eye"></button>
+                                    </a>
+                                    <a href="../edit/edit_branch.php?id=${row.branch_id}">
+                                        <button class="btn btn-secondary fas fa-edit"></button>
+                                    </a>
+                                    <a href="../delete/delete_branch.php?id=${row.branch_id}" onclick="return confirm('Are you sure you want to delete this ${row.branch_name}?');">
+                                        <button class="btn btn-danger fas fa-trash-alt"></button>
+                                    </a>
+                                </td>
+                            </tr>
+                        `);
+                        });
+                    } else {
+                        tbody.append('<tr><td colspan="7">No branches found.</td></tr>');
+                    }
                 }
             });
         });
+
+        document.getElementById('exportCSV').addEventListener('click', function () {
+            var query = $('#searchQuery').val();
+            var exportUrl = "../csv/export_branches.php";
+
+            // Append the search query if it exists
+            if (query) {
+                exportUrl += "?search_query=" + encodeURIComponent(query);
+            }
+            window.location.href = exportUrl;
+        });
+
     });
 
-
-    document.getElementById('exportCSV').addEventListener('click', function () {
-        window.location.href = "../csv/export_branches.php";
-    });
 
 </script>

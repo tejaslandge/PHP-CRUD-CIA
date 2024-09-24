@@ -8,7 +8,9 @@ if (!isset($_SESSION['username'])) {
 <?php
 
 include '../includes/db.php';
-include '../includes/header.php'
+include '../includes/header.php';
+include 'log_activity.php';
+
     ?>
 
 <?php
