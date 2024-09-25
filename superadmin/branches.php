@@ -8,12 +8,10 @@ if (!isset($_SESSION['username'])) {
 <?php
 
 include '../includes/db.php'; // Include database connection
-include 'log_activity.php';
 
-logActivity($_SESSION['user_id'], $_SESSION['username'], "Viewed Branches Table");
 
 // Number of records per page
-$records_per_page = 5;
+$records_per_page = 6;
 
 // Get the current page number from the URL or set to 1 by default
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
@@ -74,41 +72,49 @@ error_log("========IP: $ip=============");
 
         <!-- Main content -->
         <main class="col-12 col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div
-                class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h2>Branches</h2>
-                <div>
-                    <a href="#" class="btn btn-outline-success mb-2 me-2" id="exportCSV">
+            <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <!-- Title Section -->
+                <h2 class="mb-0">Branches</h2>
+
+                <!-- Search form -->
+                <form id="searchForm" class="flex-grow-1 mt-3 mx-3">
+                    <div class="input-group">
+                        <input type="text" id="searchQuery" name="search_query" class="form-control"
+                            placeholder="Search by branch name, city, state, etc.">
+
+                    </div>
+                </form>
+
+                <!-- CSV Import/Export Section -->
+                <div class="d-flex align-items-center">
+                    <a href="#" class="btn btn-outline-success me-2" id="exportCSV">
                         <i class="fas fa-file-csv"></i> Export CSV
                     </a>
-                    <a href="#" class="btn btn-outline-primary mb-2" data-bs-toggle="modal"
+                    <a href="#" class="btn btn-outline-primary me-2" data-bs-toggle="modal"
                         data-bs-target="#importModal">
                         <i class="fas fa-upload"></i> Import CSV
                     </a>
+                    <a href="../add/add_branch.php" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add New Branch
+                    </a>
                 </div>
-                <a href="../add/add_branch.php" class="btn btn-primary mb-2">Add New Branch</a>
             </div>
 
 
-            <!-- Search form -->
-            <form id="searchForm">
-                <div class="form-group d-flex">
-                    <input type="text" id="searchQuery" name="search_query" class="form-control"
-                        placeholder="Search by branch name, city, state, etc.">
-                </div>
-            </form>
+
+
 
             <!-- Table of branches -->
             <div class="table-responsive" id="branchResults">
                 <table class="table table-striped table-bordered">
                     <thead class="table-dark">
                         <tr>
-                            <th scope="col">Sr. No.</th>
-                            <th scope="col">Branch Name</th>
-                            <th scope="col">Branch Manager</th>
-                            <th scope="col">Branch Email</th>
-                            <th scope="col">Branch Mobile</th>
-                            <th scope="col">Status</th>
+                            <th scope="col"><a href="#" class="sort" data-sort="branch_id">Sr. No.</a></th>
+                            <th scope="col"><a href="#" class="sort" data-sort="branch_name">Branch Name</a></th>
+                            <th scope="col"><a href="#" class="sort" data-sort="branch_manager">Branch Manager</a></th>
+                            <th scope="col"><a href="#" class="sort" data-sort="email">Branch Email</a></th>
+                            <th scope="col"><a href="#" class="sort" data-sort="contact_number">Branch Mobile</a></th>
+                            <th scope="col"><a href="#" class="sort" data-sort="status">Status</a></th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
@@ -183,28 +189,44 @@ error_log("========IP: $ip=============");
 </div>
 <!-- Import CSV Modal -->
 <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="importModalLabel">Import CSV</h5>
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="importModalLabel">Import Branches Data from CSV</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="importCSVForm" enctype="multipart/form-data" method="POST" action="../csv/import_branches.php">
                 <div class="modal-body">
-                    <!-- Image to demonstrate the format -->
-                    <img src="../assets/dummy.jpg" alt="CSV format example" class="img-fluid mb-3" style="max-height: 300px; width: 100%; object-fit: cover;">
+                    <div class="alert alert-info">
+                        Ensure your CSV follows the correct format before uploading.
+                        <br>
+                        <a href="../csv/branches.csv" class="btn btn-primary mt-2">
+                            <i class="fas fa-file-download"></i> Download Sample CSV
+                        </a>
+                    </div>
 
-                    <!-- CSV File input field -->
-                    <div class="mb-3">
+                    <div class="form-group mt-4">
                         <label for="csvFile" class="form-label">
-                            Upload your CSV file (Ensure it follows the displayed format)
+                            Upload Your CSV File:
                         </label>
                         <input type="file" class="form-control" id="csvFile" name="csvFile" accept=".csv" required>
+                    </div>
+
+                    <div class="mt-4">
+                        <h6>Expected CSV Format:</h6>
+                        <ul class="list-group">
+                            <li class="list-group-item"><strong>branch_name:</strong> Name of the branch</li>
+                            <li class="list-group-item"><strong>branch_manager:</strong> Name of the manager</li>
+                            <li class="list-group-item"><strong>email:</strong> Branch email address</li>
+                            <li class="list-group-item"><strong>contact_number:</strong> Contact number of the branch
+                            </li>
+                            <li class="list-group-item"><strong>status:</strong> Active or Inactive</li>
+                        </ul>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <button type="submit" class="btn btn-primary">Upload CSV</button>
                 </div>
             </form>
         </div>
@@ -220,12 +242,22 @@ include '../includes/footer.php';
 <script>
 
     $(document).ready(function () {
-        $('#searchQuery').on('keyup', function () {
-            var query = $(this).val();
+        // Variables to track sorting order and column
+        var sortColumn = 'branch_id'; // Default sort by branch_id
+        var sortOrder = 'ASC'; // Default sort order
+
+        // Function to load branches with pagination and sorting
+        function loadBranches(page = 1, query = '') {
             $.ajax({
                 url: "../superadmin/fetch_branches.php",
                 method: "POST",
-                data: { search_query: query },
+                data: {
+                    search_query: query,
+                    page: page,
+                    limit: 6,
+                    sort_column: sortColumn,
+                    sort_order: sortOrder
+                },
                 dataType: 'json', // Expect JSON response
                 success: function (data) {
                     // Clear the existing table body
@@ -233,53 +265,115 @@ include '../includes/footer.php';
                     tbody.empty();
 
                     // Check if data is not empty
-                    if (data.length > 0) {
-                        $.each(data, function (index, row) {
+                    if (data.records.length > 0) {
+                        $.each(data.records, function (index, row) {
                             var statusBadge = row.status === 'active' ?
                                 '<span class="badge bg-success">Active</span>' :
                                 '<span class="badge bg-danger">Inactive</span>';
 
                             tbody.append(`
-                            <tr>
-                                <th scope="row">${index + 1}</th>
-                                <td>${row.branch_name}</td>
-                                <td>${row.branch_manager}</td>
-                                <td>${row.email}</td>
-                                <td>${row.contact_number}</td>
-                                <td>${statusBadge}</td>
-                                <td>
-                                    <a href="branch_details.php?id=${row.branch_id}">
-                                        <button class="btn btn-warning fas fa-eye"></button>
-                                    </a>
-                                    <a href="../edit/edit_branch.php?id=${row.branch_id}">
-                                        <button class="btn btn-secondary fas fa-edit"></button>
-                                    </a>
-                                    <a href="../delete/delete_branch.php?id=${row.branch_id}" onclick="return confirm('Are you sure you want to delete this ${row.branch_name}?');">
-                                        <button class="btn btn-danger fas fa-trash-alt"></button>
-                                    </a>
-                                </td>
-                            </tr>
-                        `);
+                        <tr>
+                            <th scope="row">${index + 1}</th>
+                            <td>${row.branch_name}</td>
+                            <td>${row.branch_manager}</td>
+                            <td>${row.email}</td>
+                            <td>${row.contact_number}</td>
+                            <td>${statusBadge}</td>
+                            <td>
+                                <a href="branch_details.php?id=${row.branch_id}">
+                                    <button class="btn btn-warning fas fa-eye"></button>
+                                </a>
+                                <a href="../edit/edit_branch.php?id=${row.branch_id}">
+                                    <button class="btn btn-secondary fas fa-edit"></button>
+                                </a>
+                                <a href="../delete/delete_branch.php?id=${row.branch_id}" onclick="return confirm('Are you sure you want to delete this ${row.branch_name}?');">
+                                    <button class="btn btn-danger fas fa-trash-alt"></button>
+                                </a>
+                            </td>
+                        </tr>
+                    `);
                         });
+
+                        // Update pagination
+                        var pagination = $('.pagination');
+                        pagination.empty();
+
+                        if (data.total_pages > 1) {
+                            if (page > 1) {
+                                pagination.append(`
+                                <li class="page-item">
+                                    <a class="page-link" href="#" data-page="${page - 1}">&laquo;</a>
+                                </li>
+                            `);
+                            }
+                            for (var i = 1; i <= data.total_pages; i++) {
+                                pagination.append(`
+                                <li class="page-item ${i === page ? 'active' : ''}">
+                                    <a class="page-link" href="#" data-page="${i}">${i}</a>
+                                </li>
+                            `);
+                            }
+                            if (page < data.total_pages) {
+                                pagination.append(`
+                                <li class="page-item">
+                                    <a class="page-link" href="#" data-page="${page + 1}">&raquo;</a>
+                                </li>
+                            `);
+                            }
+                        }
                     } else {
                         tbody.append('<tr><td colspan="7">No branches found.</td></tr>');
                     }
                 }
             });
+        }
+
+        // On page load, load the first page
+        loadBranches();
+
+        // Search function
+        $('#searchQuery').on('keyup', function () {
+            var query = $(this).val();
+            loadBranches(1, query); // Load first page of search results
         });
 
-        document.getElementById('exportCSV').addEventListener('click', function () {
-            var query = $('#searchQuery').val();
-            var exportUrl = "../csv/export_branches.php";
-
-            // Append the search query if it exists
-            if (query) {
-                exportUrl += "?search_query=" + encodeURIComponent(query);
+        // Handle sorting
+        $('.sort').on('click', function (e) {
+            e.preventDefault();
+            var column = $(this).data('sort');
+            if (sortColumn === column) {
+                // Toggle sort order if the same column is clicked
+                sortOrder = (sortOrder === 'ASC') ? 'DESC' : 'ASC';
+            } else {
+                // Sort by new column
+                sortColumn = column;
+                sortOrder = 'ASC';
             }
-            window.location.href = exportUrl;
+            loadBranches(1, $('#searchQuery').val()); // Load first page with new sorting
         });
 
+        // Handle pagination click
+        $(document).on('click', '.pagination a', function (e) {
+            e.preventDefault();
+            var page = $(this).data('page');
+            var query = $('#searchQuery').val();
+            loadBranches(page, query);
+        });
     });
+
+
+    document.getElementById('exportCSV').addEventListener('click', function () {
+        var query = $('#searchQuery').val();
+        var exportUrl = "../csv/export_branches.php";
+
+        // Append the search query if it exists
+        if (query) {
+            exportUrl += "?search_query=" + encodeURIComponent(query);
+        }
+        window.location.href = exportUrl;
+    });
+
+
 
 
 </script>

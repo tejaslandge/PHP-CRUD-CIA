@@ -7,13 +7,15 @@ if (!isset($_SESSION['username'])) {
 ?>
 <?php
 include '../includes/db.php';
-include 'log_activity.php';
+include '../superadmin/log_activity.php';
 
 
 // Check if branch_id is provided in the URL
 if (isset($_GET['id'])) {
     $branch_id = $_GET['id'];
 
+    
+    
     // Fetch the branch details from the database
     $sql = "SELECT * FROM branches WHERE branch_id = ?";
     $stmt = $conn->prepare($sql);
@@ -52,7 +54,7 @@ if (isset($_GET['id'])) {
         if ($total_employees <= 0) {
             $errors[] = "Total Employees must be a positive number.";
         }
-
+        
         if (empty($errors)) {
             // Update the branch details in the database
             $sql_update = "UPDATE branches SET branch_name=?, branch_address=?, city=?, state=?, contact_number=?, email=?, branch_manager=?, date_established=?, status=?, total_employees=? WHERE branch_id=?";
@@ -62,6 +64,7 @@ if (isset($_GET['id'])) {
             if ($stmt_update->execute()) {
                 echo "Branch updated successfully!";
                 header("Location:../superadmin/branches.php");
+                logActivity($_SESSION['user_id'], $_SESSION['username'], "User Edit the data of branch");
                 exit;
             } else {
                 echo "Error updating branch: " . $conn->error;

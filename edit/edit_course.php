@@ -9,7 +9,7 @@ if (!isset($_SESSION['username'])) {
 
 include '../includes/db.php';
 include '../includes/header.php';
-include 'log_activity.php';
+include '../superadmin/log_activity.php';
 
 
 $course_id = $_GET['id'];
@@ -21,6 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $course_fee = $_POST['course_fee'];
     $status = $_POST['status'];
 
+
+
     // Update query
     $sql = "UPDATE courses SET course_name='$course_name', course_description='$course_description', 
             course_duration='$course_duration', course_fee='$course_fee', status='$status' 
@@ -29,6 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (mysqli_query($conn, $sql)) {
         echo "Course updated successfully!";
         header('Location:../superadmin/courses.php  ');
+        logActivity($_SESSION['user_id'], $_SESSION['username'], "User edit the data of course");
+
 
     } else {
         echo "Error: " . mysqli_error($conn);
@@ -47,26 +51,32 @@ $course = mysqli_fetch_assoc($result);
     <form method="POST">
         <div class="form-group">
             <label for="course_name">Course Name</label>
-            <input type="text" class="form-control" name="course_name" value="<?php echo $course['course_name']; ?>" required>
+            <input type="text" class="form-control" name="course_name" value="<?php echo $course['course_name']; ?>"
+                required>
         </div>
         <div class="form-group">
             <label for="course_description">Course Description</label>
-            <textarea class="form-control" name="course_description" required><?php echo $course['course_description']; ?></textarea>
+            <textarea class="form-control" name="course_description"
+                required><?php echo $course['course_description']; ?></textarea>
         </div>
         <div class="form-group">
             <label for="course_duration">Course Duration</label>
-            <input type="text" class="form-control" name="course_duration" value="<?php echo $course['course_duration']; ?>" required>
+            <input type="text" class="form-control" name="course_duration"
+                value="<?php echo $course['course_duration']; ?>" required>
         </div>
         <div class="form-group">
             <label for="course_fee">Course Fee</label>
-            <input type="number" class="form-control" name="course_fee" value="<?php echo $course['course_fee']; ?>" required>
+            <input type="number" class="form-control" name="course_fee" value="<?php echo $course['course_fee']; ?>"
+                required>
         </div>
         <div class="form-group">
             <label for="status">Status</label>
             <select class="form-control" name="status" required>
                 <option value="active" <?php echo ($course['status'] == 'active') ? 'selected' : ''; ?>>Active</option>
-                <option value="completed" <?php echo ($course['status'] == 'completed') ? 'selected' : ''; ?>>completed</option>
-                <option value="cancelled" <?php echo ($course['status'] == 'cancelled') ? 'selected' : ''; ?>>cancelled</option>
+                <option value="completed" <?php echo ($course['status'] == 'completed') ? 'selected' : ''; ?>>completed
+                </option>
+                <option value="cancelled" <?php echo ($course['status'] == 'cancelled') ? 'selected' : ''; ?>>cancelled
+                </option>
             </select>
         </div>
         <button type="submit" class="btn btn-primary">Update Course</button>

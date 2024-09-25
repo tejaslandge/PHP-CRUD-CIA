@@ -1,6 +1,5 @@
 <?php
 session_start();
-include 'log_activity.php';
 
 if (!isset($_SESSION['username'])) {
     header('Location: ../superadmin/login_form.php'); // Redirect to login if not logged in

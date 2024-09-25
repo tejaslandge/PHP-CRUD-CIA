@@ -8,9 +8,7 @@ if (!isset($_SESSION['username'])) {
 <?php
 include '../includes/db.php';
 include '../includes/header.php';
-include 'log_activity.php';
 
-logActivity($_SESSION['user_id'], $_SESSION['username'], "Viewed Courses Table");
 
 // Query to fetch data from the branches table
 $sql = "SELECT * FROM courses";

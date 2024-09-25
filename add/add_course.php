@@ -9,7 +9,8 @@ if (!isset($_SESSION['username'])) {
 
 include '../includes/db.php';
 include '../includes/header.php';
-include 'log_activity.php';
+include '../superadmin/log_activity.php';
+
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -25,6 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (mysqli_query($conn, $sql)) {
         echo "New course added successfully!";
+        logActivity($_SESSION['user_id'], $_SESSION['username'], "Add Course");
+
         header('Location:../superadmin/courses.php  ');
     } else {
         echo "Error: " . mysqli_error($conn);

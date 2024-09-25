@@ -8,7 +8,7 @@ if (!isset($_SESSION['username'])) {
 <?php
 // Include your database connection file
 include '../includes/db.php';
-include 'log_activity.php';
+include '../superadmin/log_activity.php';
 
 
 // Check if the form is submitted
@@ -44,6 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$course_name', '$date_of_birth', '$gender', '$address', '$city', '$state', '$postal_code', '$enrollment_date', '$guardian_name', '$guardian_contact', '$profile_picture', '$remarks')";
 
     if (mysqli_query($conn, $sql)) {
+        logActivity($_SESSION['user_id'], $_SESSION['username'], "Add Students Data");
+
         echo "<div class='alert alert-success'>Student added successfully!</div>";
     } else {
         echo "<div class='alert alert-danger'>Error: " . mysqli_error($conn) . "</div>";

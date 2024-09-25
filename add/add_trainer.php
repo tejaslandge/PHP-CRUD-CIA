@@ -9,7 +9,7 @@ if (!isset($_SESSION['username'])) {
 
 include '../includes/db.php';
 include '../includes/header.php';
-include 'log_activity.php';
+include '../superadmin/log_activity.php';
 
     ?>
 
@@ -110,6 +110,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Execute the statement and check for success
     if ($stmt_insert->execute()) {
         echo "Trainer added successfully!";
+        logActivity($_SESSION['user_id'], $_SESSION['username'], "Add Trainer Data");
+
         header("Location: ../superadmin/trainers.php");
     } else {
         echo "Error adding trainer: " . $conn->error;

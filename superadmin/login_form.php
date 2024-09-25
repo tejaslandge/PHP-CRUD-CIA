@@ -1,7 +1,7 @@
 <?php
 session_start();
-include '../includes/db.php'; 
-include 'log_activity.php';
+include '../includes/db.php';
+include '../superadmin/log_activity.php';
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -15,7 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $row = mysqli_fetch_assoc($result);
         $_SESSION['user_id'] = $row['id']; // Store the user ID in the session
         $_SESSION['username'] = $row['username']; // Store the username in the session
+        logActivity($_SESSION['user_id'], $_SESSION['username'], "User logged in");
+
         header('Location: ../superadmin/dashboard.php'); // Redirect to the profile page
+
         exit();
     } else {
         echo "Invalid login credentials";
@@ -39,8 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST" class="mt-4">
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" name="username" id="username"
-                    placeholder="Enter username" required>
+                <input type="text" class="form-control" name="username" id="username" placeholder="Enter username"
+                    required>
             </div>
 
             <div class="mb-3">

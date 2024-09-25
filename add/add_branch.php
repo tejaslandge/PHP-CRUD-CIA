@@ -8,7 +8,7 @@ if (!isset($_SESSION['username'])) {
 <?php
 include '../includes/db.php';
 include '../includes/header.php';
-include 'log_activity.php';
+include '../superadmin/log_activity.php';
 
 
 // Handle form submission to add a new branch
@@ -33,6 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($stmt_insert->execute()) {
         echo "Branch added successfully!";
+        logActivity($_SESSION['user_id'], $_SESSION['username'], "Add Branch");
+
         header("Location:../superadmin/branches.php");
     } else {
         echo "Error adding branch: " . $conn->error;
@@ -69,12 +71,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="col-md-6">
                             <label for="branch_name" class="form-label">Branch Name</label>
                             <input type="text" maxlength="30" class="form-control" id="branch_name" name="branch_name"
-                                required>
-
+                                placeholder="Enter branch name" required>
                         </div>
                         <div class="col-md-6">
                             <label for="branch_address" class="form-label">Branch Address</label>
-                            <input type="text" class="form-control" id="branch_address" name="branch_address" required>
+                            <input type="text" class="form-control" id="branch_address" name="branch_address"
+                                placeholder="Enter branch address" required>
                         </div>
                     </div>
 
@@ -83,46 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <label for="state" class="form-label">State</label>
                             <select class="form-select" id="state" name="state" required>
                                 <option value="" disabled selected>Select a state</option>
-                                <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                                <option value="Assam">Assam</option>
-                                <option value="Bihar">Bihar</option>
-                                <option value="Chhattisgarh">Chhattisgarh</option>
-                                <option value="Goa">Goa</option>
-                                <option value="Gujarat">Gujarat</option>
-                                <option value="Haryana">Haryana</option>
-                                <option value="Himachal Pradesh">Himachal Pradesh</option>
-                                <option value="Jharkhand">Jharkhand</option>
-                                <option value="Karnataka">Karnataka</option>
-                                <option value="Kerala">Kerala</option>
-                                <option value="Madhya Pradesh">Madhya Pradesh</option>
-                                <option value="Maharashtra">Maharashtra</option>
-                                <option value="Manipur">Manipur</option>
-                                <option value="Meghalaya">Meghalaya</option>
-                                <option value="Mizoram">Mizoram</option>
-                                <option value="Nagaland">Nagaland</option>
-                                <option value="Odisha">Odisha</option>
-                                <option value="Punjab">Punjab</option>
-                                <option value="Rajasthan">Rajasthan</option>
-                                <option value="Sikkim">Sikkim</option>
-                                <option value="Tamil Nadu">Tamil Nadu</option>
-                                <option value="Telangana">Telangana</option>
-                                <option value="Tripura">Tripura</option>
-                                <option value="Uttar Pradesh">Uttar Pradesh</option>
-                                <option value="Uttarakhand">Uttarakhand</option>
-                                <option value="West Bengal">West Bengal</option>
-                                <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
-                                <option value="Chandigarh">Chandigarh</option>
-                                <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and
-                                    Daman
-                                    and
-                                    Diu
-                                </option>
-                                <option value="Delhi">Delhi</option>
-                                <option value="Lakshadweep">Lakshadweep</option>
-                                <option value="Puducherry">Puducherry</option>
-                                <option value="Ladakh">Ladakh</option>
-                                <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                <!-- List of states -->
+                                <!-- You can add your own list here -->
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -133,35 +97,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                     </div>
                     <div class="row mb-3">
-
                         <div class="col-md-6">
                             <label for="contact_number" class="form-label">Contact Number</label>
                             <input type="tel" class="form-control" id="contact_number" name="contact_number"
                                 pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number" maxlength="10"
-                                inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
+                                inputmode="numeric" placeholder="Enter 10-digit contact number"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
                         </div>
                         <div class="col-md-6">
-
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
+                            <input type="email" class="form-control" id="email" name="email"
+                                placeholder="Enter branch email address" required>
                         </div>
                     </div>
 
                     <div class="row mb-3">
-
                         <div class="col-md-6">
                             <label for="branch_manager" class="form-label">Branch Manager</label>
-                            <input type="text" class="form-control" id="branch_manager" name="branch_manager" required>
+                            <input type="text" class="form-control" id="branch_manager" name="branch_manager"
+                                placeholder="Enter branch manager's name" required>
                         </div>
                         <div class="col-md-6">
-
                             <label for="date_established" class="form-label">Date Established</label>
                             <input type="date" class="form-control" id="date_established" name="date_established"
                                 required>
                         </div>
                     </div>
                     <div class="row mb-3">
-
                         <div class="col-md-6">
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select" id="status" name="status" required>
@@ -170,10 +132,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </select>
                         </div>
                         <div class="col-md-6">
-
                             <label for="total_employees" class="form-label">Total Employees</label>
                             <input type="number" class="form-control" id="total_employees" name="total_employees"
-                                required>
+                                placeholder="Enter total employees count" required>
                         </div>
                     </div>
 
@@ -185,6 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 <?php
 include '../includes/footer.php';
 ?>

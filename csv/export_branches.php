@@ -1,5 +1,7 @@
 <?php
-include '../includes/db.php'; // Include database connection
+include '../includes/db.php';
+include '../superadmin/log_activity.php';
+
 
 // Initialize the query for fetching branches
 $sql = "SELECT * FROM branches";
@@ -42,6 +44,8 @@ if ($result) {
     while ($row = mysqli_fetch_assoc($result)) {
         fputcsv($output, [$row['branch_id'], $row['branch_name'], $row['branch_manager'], $row['email'], $row['contact_number'], $row['status']]);
     }
+
+    logActivity($_SESSION['user_id'], $_SESSION['username'], "Export CSV");
 
     fclose($output);
     exit; // Stop further execution

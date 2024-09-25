@@ -7,6 +7,8 @@ if (!isset($_SESSION['username'])) {
 ?>
 <?php
 include '../includes/db.php';
+include '../superadmin/log_activity.php';
+
 
 
 
@@ -37,6 +39,8 @@ if (isset($_FILES['csvFile']) && $_FILES['csvFile']['error'] == 0) {
     }
 
     fclose($handle);
+    
     header('Location: ../superadmin/branches.php');
+    logActivity($_SESSION['user_id'], $_SESSION['username'], "Import CSV");
 }
 ?>
