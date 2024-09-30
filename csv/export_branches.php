@@ -11,6 +11,7 @@ if (isset($_GET['search_query']) && !empty($_GET['search_query'])) {
     $search_query = $_GET['search_query'];
     // Protect against SQL injection
     $search_query = $conn->real_escape_string($search_query);
+    logActivity($_SESSION['user_id'], $_SESSION['username'], "Export CSV");
 
 
     // Modify the query to search across relevant columns
@@ -38,14 +39,13 @@ if ($result) {
     $output = fopen('php://output', 'w');
 
     // Write CSV headers
-    fputcsv($output, ['Branch ID', 'Branch Name', 'Branch Manager', 'Email', 'Contact Number', 'Status']);
+    fputcsv($output, ['Branch Name', 'Branch Manager', 'Email', 'Contact Number', 'Status']);
 
     // Fetch and write each row to the CSV
     while ($row = mysqli_fetch_assoc($result)) {
-        fputcsv($output, [$row['branch_id'], $row['branch_name'], $row['branch_manager'], $row['email'], $row['contact_number'], $row['status']]);
+        fputcsv($output, [$row['branch_name'], $row['branch_manager'], $row['email'], $row['contact_number'], $row['status']]);
     }
 
-    logActivity($_SESSION['user_id'], $_SESSION['username'], "Export CSV");
 
     fclose($output);
     exit; // Stop further execution
@@ -55,4 +55,15 @@ if ($result) {
 }
 
 mysqli_close($conn);
+
+
+// Error Handle 
+error_reporting(E_ALL);
+ini_set("Display_error",0);
+
+function error_display($errno, $errstr, $errfile, $errline){
+    $message = "Error : $errno ,Error Message : $errstr,Error_file:$errfile ,Error_line : $errline";
+    error_log($message . PHP_EOL,3,"../error/error_log.txt");
+}
+set_error_handler(callback: "error_display");
 ?>

@@ -1,8 +1,7 @@
 <?php
 session_start();
 include '../includes/db.php'; 
-include 'log_activity.php';
-
+include '../superadmin/log_activity.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: ../superadmin/login_form.php'); // Redirect to login if not logged in
@@ -14,6 +13,7 @@ $error_stmt = ''; // Initialize error message variable
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_SESSION['user_id'];
+    $username = $_SESSION['username'];
     $current_password = $_POST['current_password'];
     $new_password = $_POST['new_password'];
     $confirm_password = $_POST['confirm_password'];
@@ -30,9 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Update the new password in the database
             $update_query = "UPDATE users SET password = '$new_password' WHERE id = '$user_id'";
             if (mysqli_query($conn, $update_query)) {
+                // Log the change password activity
+                logActivity($user_id, $username, "change password");
+
                 $_SESSION['passstmt'] = "<div class='alert alert-success'>Password updated successfully!</div>";
                 // Instead of redirecting immediately, set a flag to show the message and handle redirection via JavaScript
-                header("Location: ../superadmin/my_profile.php?delay=5");
+                header("Location: ../superadmin/my_profile.php");
                 exit();
             } else {
                 $error_stmt = "<div class='alert alert-danger'>Error updating password.</div>";
@@ -44,6 +47,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error_stmt = "<div class='alert alert-danger'>Current password is incorrect.</div>";
     }
 }
+
+
+
+// Error Handle 
+error_reporting(E_ALL);
+ini_set("Display_error",0);
+
+function error_display($errno, $errstr, $errfile, $errline){
+    $message = "Error : $errno ,Error Message : $errstr,Error_file:$errfile ,Error_line : $errline";
+    error_log($message . PHP_EOL,3,"../error/error_log.txt");
+}
+set_error_handler(callback: "error_display");
 ?>
 
 <!DOCTYPE html>
@@ -71,12 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <main class="col-12 col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="container mt-5">
                     <h2>Change Password</h2>
-                    
-                    <!-- Display the success message -->
-                    <?php if (isset($_SESSION['passstmt'])): ?>
-                        <?php echo $_SESSION['passstmt']; ?>
-                        <?php unset($_SESSION['passstmt']); // Clear the message after displaying it ?>
-                    <?php endif; ?>
 
                     <!-- Display error messages -->
                     <?php if (!empty($error_stmt)): ?>

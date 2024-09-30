@@ -11,9 +11,9 @@ ini_set("Display_error",0);
 
 function error_display($errno, $errstr, $errfile, $errline){
     $message = "Error : $errno ,Error Message : $errstr,Error_file:$errfile ,Error_line : $errline";
-    error_log($message . PHP_EOL,3,"../error/error_log.txt");
+    error_log($message . PHP_EOL, 3, "../error/error_log.txt");
 }
-set_error_handler(callback: "error_display");
+set_error_handler("error_display");
 
 include '../includes/db.php'; // Assuming db.php handles the database connection
 include '../superadmin/log_activity.php';
@@ -27,7 +27,7 @@ if (isset($_FILES['csvFile']) && $_FILES['csvFile']['error'] == 0) {
         fgetcsv($handle);
 
         // Prepare SQL statement
-        $stmt = $conn->prepare("INSERT INTO branches (branch_name, branch_manager, email, contact_number, status) VALUES (?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO trainers (first_name, last_name, email, phone_number, trainer_branch, status) VALUES (?, ?, ?, ?, ?, ?)");
         if ($stmt === false) {
             die("Error preparing the statement: " . $conn->error);
         }
@@ -35,22 +35,23 @@ if (isset($_FILES['csvFile']) && $_FILES['csvFile']['error'] == 0) {
         // Loop through each row in the CSV
         while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
             // Sanitize and validate data
-            $branch_name = trim($data[0]);
-            $branch_manager = trim($data[1]);
+            $first_name = trim($data[0]);
+            $last_name = trim($data[1]);
             $email = filter_var($data[2], FILTER_VALIDATE_EMAIL) ? $data[2] : null;
-            $contact_number = preg_match('/^[0-9]{10}$/', $data[3]) ? $data[3] : null;
-            $status = in_array(strtolower($data[4]), ['active', 'inactive']) ? strtolower($data[4]) : 'inactive';
+            $phone_number = preg_match('/^[0-9]{10}$/', $data[3]) ? $data[3] : null;
+            $trainer_branch = trim($data[4]);
+            $status = in_array(strtolower($data[5]), ['active', 'inactive']) ? strtolower($data[5]) : 'inactive';
 
-            // Check if email and contact_number are valid
-            if ($email && $contact_number) {
+            // Check if email and phone_number are valid
+            if ($email && $phone_number) {
                 // Bind parameters and execute the statement
-                if ($stmt->bind_param('sssss', $branch_name, $branch_manager, $email, $contact_number, $status)) {
+                if ($stmt->bind_param('ssssss', $first_name, $last_name, $email, $phone_number, $trainer_branch, $status)) {
                     $stmt->execute();
                 } else {
                     echo "Error binding parameters: " . $stmt->error;
                 }
             } else {
-                echo "Invalid data for branch: $branch_name. Email or contact number is incorrect.<br>";
+                echo "Invalid data for trainer: $first_name $last_name. Email or phone number is incorrect.<br>";
             }
         }
 
@@ -59,10 +60,11 @@ if (isset($_FILES['csvFile']) && $_FILES['csvFile']['error'] == 0) {
         $stmt->close();
 
         // Log activity after successful import
-        logActivity($_SESSION['user_id'], $_SESSION['username'], "Imported CSV file with branches data.");
+        logActivity($_SESSION['user_id'], $_SESSION['username'], "Imported CSV file with trainers data.");
 
-        // Redirect to the branches page
-        header('Location: ../superadmin/branches.php');
+        // Redirect to the trainers page
+        header('Location: ../superadmin/trainers.php');
+        exit;
     } else {
         echo "Error opening the CSV file.";
     }

@@ -2,14 +2,23 @@
 session_start();
 if (!isset($_SESSION['username'])) {
     header('Location: ../superadmin/login_form.php'); // Redirect to login if not logged in
-    exit;
+    exit; // Ensure no further code is executed
 }
-?>
-<?php
+// Error Handle 
+error_reporting(E_ALL);
+ini_set("Display_error",0);
+
+function error_display($errno, $errstr, $errfile, $errline){
+    $message = "Error : $errno ,Error Message : $errstr,Error_file:$errfile ,Error_line : $errline";
+    error_log($message . PHP_EOL,3,"../error/error_log.txt");
+}
+set_error_handler(callback: "error_display");
+
+
+
 include '../includes/db.php';
 include '../includes/header.php';
 include '../superadmin/log_activity.php';
-
 
 // Handle form submission to add a new branch
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -24,26 +33,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $status = $_POST['status'];
     $total_employees = $_POST['total_employees'];
 
-    if($branch_name!=""&& $branch_address!=""&& $city !=""&& $state!=""&& $contact_number!=""&& $email!=""&& $date_established!=""&& $status!=""&& $total_employees!= "") {
+    // Check if all required fields are filled
+    if (!empty($branch_name) && !empty($branch_address) && !empty($city) && !empty($state) && 
+        !empty($contact_number) && !empty($email) && !empty($date_established) && 
+        !empty($status) && !empty($total_employees)) {
 
-    // Insert the new branch details into the database
-    $sql_insert = "INSERT INTO branches (branch_name, branch_address, city, state, contact_number, email, branch_manager, date_established, status, total_employees) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    $stmt_insert = $conn->prepare($sql_insert);
-    $stmt_insert->bind_param("sssssssssi", $branch_name, $branch_address, $city, $state, $contact_number, $email, $branch_manager, $date_established, $status, $total_employees);
+        // Prepare the SQL query to insert the new branch
+        $sql_insert = "INSERT INTO branches (branch_name, branch_address, city, state, contact_number, email, branch_manager, date_established, status, total_employees) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt_insert = $conn->prepare($sql_insert);
+        
+        // Bind the parameters to the prepared statement
+        $stmt_insert->bind_param("sssssssssi", $branch_name, $branch_address, $city, $state, 
+            $contact_number, $email, $branch_manager, $date_established, $status, $total_employees);
 
-    if ($stmt_insert->execute()) {
-        echo "Branch added successfully!";
-        logActivity($_SESSION['user_id'], $_SESSION['username'], "Add Branch");
+        // Execute the query
+        if ($stmt_insert->execute()) {
+            if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
+                logActivity($_SESSION['user_id'], $_SESSION['username'], "Added a new branch : $branch_name");
+            }
+            // Redirect to branches.php after successful insertion
+            echo "<script>window.location.href = '../superadmin/branches.php';</script>";
+            exit; // Make sure to exit after the redirect
+        } else {
+            echo "<script>alert('Error adding branch: " . $conn->error . "');</script>";
+        }
 
-        header("Location:../superadmin/branches.php");
     } else {
-        echo "Error adding branch: " . $conn->error;
+        echo "<script>alert('Please fill out all the fields.');</script>";
     }
-} else {
-    echo "<script>alert('Please fill out all the fields.!')</script>";
-}
 }
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -186,10 +208,17 @@ include '../includes/footer.php';
         "West Bengal": ["Alipurduar", "Bankura", "Birbhum", "Cooch Behar", "Dakshin Dinajpur", "Darjeeling", "Hooghly", "Howrah", "Jalpaiguri", "Jhargram", "Kalimpong", "Kolkata", "Malda", "Murshidabad"]
     };
 
-   
+    const stateSelect = document.getElementById('state');
+
+    // Populate the state dropdown
+    for (let state in stateDistricts) {
+        let option = document.createElement('option');
+        option.value = state;
+        option.text = state;
+        stateSelect.appendChild(option);
+    }
 
     // Get references to the state and district dropdowns
-    const stateSelect = document.getElementById('state');
     const districtSelect = document.getElementById('district');
 
     // Event listener for state dropdown change

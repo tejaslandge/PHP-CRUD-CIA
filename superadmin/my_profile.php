@@ -36,6 +36,17 @@ if ($result && $result->num_rows > 0) {
 
 // Close the connection
 $conn->close();
+
+
+// Error Handle 
+error_reporting(E_ALL);
+ini_set("Display_error",0);
+
+function error_display($errno, $errstr, $errfile, $errline){
+    $message = "Error : $errno ,Error Message : $errstr,Error_file:$errfile ,Error_line : $errline";
+    error_log($message . PHP_EOL,3,"../error/error_log.txt");
+}
+set_error_handler(callback: "error_display");
 ?>
 <!DOCTYPE html>
 
@@ -45,6 +56,7 @@ $conn->close();
     <title>Admin Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
     <div style="position: sticky; top:0;">
         <?php include '../includes/header.php'; ?>
@@ -58,6 +70,10 @@ $conn->close();
             </nav>
             <main class="col-12 col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="container mt-5">
+                    <?php if (isset($_SESSION['passstmt'])): ?>
+                        <?php echo $_SESSION['passstmt']; ?>
+                        <?php unset($_SESSION['passstmt']); // Clear the message after displaying it ?>
+                    <?php endif; ?>
                     <h2>Admin Profile</h2>
                     <a href="../superadmin/change_password.php"><button class="btn btn-primary">Change
                             Password</button></a>

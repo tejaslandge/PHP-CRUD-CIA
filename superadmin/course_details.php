@@ -16,9 +16,30 @@ $sql = "SELECT * FROM courses WHERE course_id='$course_id'";
 $result = mysqli_query($conn, $sql);
 $course = mysqli_fetch_assoc($result);
 
+
+// Error Handle 
+error_reporting(E_ALL);
+ini_set("Display_error",0);
+
+function error_display($errno, $errstr, $errfile, $errline){
+    $message = "Error : $errno ,Error Message : $errstr,Error_file:$errfile ,Error_line : $errline";
+    error_log($message . PHP_EOL,3,"../error/error_log.txt");
+}
+set_error_handler(callback: "error_display");
 ?>
  
-<div class="container">
+
+
+<!-- Dashboard Container -->
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="col-md-3 d-none d-md-block col-lg-2 d-md-block bg-light fixed-top-10 ">
+            <?php include '../includes/sidebar.php'; ?>
+        </nav>
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="container">
     <h2>Course Details</h2>
     <table class="table table-bordered">
         <tr>
@@ -42,20 +63,20 @@ $course = mysqli_fetch_assoc($result);
             <td>
                 <?php if ($course['status'] == 'active') { ?>
                     <span class="badge bg-success">Active</span>
-                <?php } elseif ($course['status'] == 'completed') { ?>
-                    <span class="badge bg-warning">Completed</span>
                 <?php } else { ?>
-                    <span class="badge bg-danger">Cancelled</span>
+                    <span class="badge bg-danger">Inactive</span>
                 <?php } ?>
             </td>
         </tr>
     </table>
-    <a href="../superadmin/courses.php" class="btn btn-danger">Back to Courses</a>
     <a href="../edit/edit_course.php?id=<?php echo $course_id; ?>">
-        <button class="btn btn-secondary">Edit Course</button>
+        <button class="btn btn-primary">Edit Course</button>
     </a>
+    <a href="../superadmin/courses.php" class="btn btn-secondary mx-3">Back</a>
 </div>
-
+        </main>
+    </div>
+</div>
 
 <?php
 include '../includes/footer.php';

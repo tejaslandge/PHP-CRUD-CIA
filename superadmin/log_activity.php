@@ -1,24 +1,29 @@
 <?php
 // log_activity.php
 
-function logActivity($userId, $username, $action) {
-    // Database connection
-    include '../includes/db.php';
-    
-    // Prepare SQL query to insert log entry
-    $stmt = $conn->prepare("INSERT INTO activity_log (user_id, username, action) VALUES (?, ?, ?)");
-    $stmt->bind_param("iss", $userId, $username, $action);
-    
-    // Execute the query
-    if ($stmt->execute()) {
-        // Success
-        return true;
-    } else {
-        // Error
-        return false;
-    }
+// Include your database connection file
+include '../includes/db.php'; // Adjust the path as necessary
 
-    // Close statement
+function logActivity($user_id, $username, $action) {
+    global $conn;
+    
+    // Check if the connection is valid
+    if ($conn === null) {
+        die("Database connection failed.");
+    }
+    
+    // Prepare the SQL statement
+    $sql = "INSERT INTO activity_log (user_id, username, action, log_time) VALUES (?, ?, ?, NOW())";
+    $stmt = $conn->prepare($sql);
+    
+    if ($stmt === false) {
+        die("Failed to prepare the SQL statement.");
+    }
+    
+    // Bind the parameters and execute the statement
+    $stmt->bind_param("iss", $user_id, $username, $action);
+    $stmt->execute();
     $stmt->close();
 }
+
 ?>

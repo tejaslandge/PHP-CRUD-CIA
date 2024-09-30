@@ -6,11 +6,25 @@ if (!isset($_SESSION['username'])) {
 }
 ?>
 <?php
+// Error Handle 
+error_reporting(E_ALL);
+ini_set("Display_error",0);
+
+function error_display($errno, $errstr, $errfile, $errline){
+    $message = "Error : $errno ,Error Message : $errstr,Error_file:$errfile ,Error_line : $errline";
+    error_log($message . PHP_EOL,3,"../error/error_log.txt");
+}
+set_error_handler(callback: "error_display");
+
 
 include '../includes/db.php';
 include '../includes/header.php';
 include '../superadmin/log_activity.php';
 
+
+if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
+    logActivity($_SESSION['user_id'], $_SESSION['username'], "Edit data of Course");
+}
 
 $course_id = $_GET['id'];
 
@@ -30,10 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (mysqli_query($conn, $sql)) {
         echo "Course updated successfully!";
-        header('Location:../superadmin/courses.php  ');
-        logActivity($_SESSION['user_id'], $_SESSION['username'], "User edit the data of course");
+        // header('Location:../superadmin/courses.php');
+        echo "<script>window.location.href = '../superadmin/courses.php';</script>";
 
-
+        exit;
     } else {
         echo "Error: " . mysqli_error($conn);
     }
@@ -73,10 +87,9 @@ $course = mysqli_fetch_assoc($result);
             <label for="status">Status</label>
             <select class="form-control" name="status" required>
                 <option value="active" <?php echo ($course['status'] == 'active') ? 'selected' : ''; ?>>Active</option>
-                <option value="completed" <?php echo ($course['status'] == 'completed') ? 'selected' : ''; ?>>completed
+                <option value="inactive" <?php echo ($course['status'] == 'inactive') ? 'selected' : ''; ?>>Inactive
                 </option>
-                <option value="cancelled" <?php echo ($course['status'] == 'cancelled') ? 'selected' : ''; ?>>cancelled
-                </option>
+                
             </select>
         </div>
         <button type="submit" class="btn btn-primary">Update Course</button>

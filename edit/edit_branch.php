@@ -4,18 +4,26 @@ if (!isset($_SESSION['username'])) {
     header('Location: ../superadmin/login_form.php'); // Redirect to login if not logged in
     exit;
 }
-?>
-<?php
+// Error Handle 
+error_reporting(E_ALL);
+ini_set("Display_error",0);
+
+function error_display($errno, $errstr, $errfile, $errline){
+    $message = "Error : $errno ,Error Message : $errstr,Error_file:$errfile ,Error_line : $errline";
+    error_log($message . PHP_EOL,3,"../error/error_log.txt");
+}
+set_error_handler(callback: "error_display");
+
+
 include '../includes/db.php';
 include '../superadmin/log_activity.php';
+
 
 
 // Check if branch_id is provided in the URL
 if (isset($_GET['id'])) {
     $branch_id = $_GET['id'];
 
-    
-    
     // Fetch the branch details from the database
     $sql = "SELECT * FROM branches WHERE branch_id = ?";
     $stmt = $conn->prepare($sql);
@@ -46,15 +54,15 @@ if (isset($_GET['id'])) {
 
         // Server-side validation
         $errors = [];
-        
+
         if (!preg_match('/^\d+$/', $contact_number)) {
             $errors[] = "Contact Number must be numeric.";
         }
-        
+
         if ($total_employees <= 0) {
             $errors[] = "Total Employees must be a positive number.";
         }
-        
+
         if (empty($errors)) {
             // Update the branch details in the database
             $sql_update = "UPDATE branches SET branch_name=?, branch_address=?, city=?, state=?, contact_number=?, email=?, branch_manager=?, date_established=?, status=?, total_employees=? WHERE branch_id=?";
@@ -62,13 +70,17 @@ if (isset($_GET['id'])) {
             $stmt_update->bind_param("ssssssssssi", $branch_name, $branch_address, $city, $state, $contact_number, $email, $branch_manager, $date_established, $status, $total_employees, $branch_id);
 
             if ($stmt_update->execute()) {
-                echo "Branch updated successfully!";
-                header("Location:../superadmin/branches.php");
-                logActivity($_SESSION['user_id'], $_SESSION['username'], "User Edit the data of branch");
+                // Log activity if the user is logged in
+                if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
+                    logActivity($_SESSION['user_id'], $_SESSION['username'], "Edit data of Branch");
+                }
+                $_SESSION['success_message'] = "Branch updated successfully!";
+                header("Location: ../superadmin/branches.php");
                 exit;
             } else {
                 echo "Error updating branch: " . $conn->error;
             }
+            $stmt_update->close();
         } else {
             // Output the errors
             foreach ($errors as $error) {
@@ -76,6 +88,8 @@ if (isset($_GET['id'])) {
             }
         }
     }
+
+    $stmt->close();
 } else {
     echo "Invalid branch ID.";
     exit;
@@ -100,12 +114,21 @@ if (isset($_GET['id'])) {
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <nav id="sidebar" class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar mt-5 position-fixed" style="top: 0;">
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar mt-5 position-fixed"
+                style="top: 0;">
                 <?php include '../includes/sidebar.php'; ?>
             </nav>
             <main class="col-12 col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <form method="POST" action="" class="p-4 bg-light rounded shadow-sm">
                     <h1>Edit Branch</h1>
+
+                    <?php if (!empty($errors)): ?>
+                        <div class="alert alert-danger">
+                            <?php foreach ($errors as $error): ?>
+                                <p><?php echo $error; ?></p>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
@@ -139,7 +162,7 @@ if (isset($_GET['id'])) {
                             <input type="tel" class="form-control" id="contact_number" name="contact_number"
                                 pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number" maxlength="10"
                                 inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required
-                                value="<?php echo htmlspecialchars($branch['contact_number']); ?>" >
+                                value="<?php echo htmlspecialchars($branch['contact_number']); ?>">
                         </div>
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email</label>
@@ -165,8 +188,12 @@ if (isset($_GET['id'])) {
                         <div class="col-md-6">
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select" id="status" name="status" required>
-                                <option value="active" <?php if ($branch['status'] == 'active') echo 'selected'; ?>>Active</option>
-                                <option value="inactive" <?php if ($branch['status'] == 'inactive') echo 'selected'; ?>>Inactive</option>
+                                <option value="active" <?php if ($branch['status'] == 'active')
+                                    echo 'selected'; ?>>Active
+                                </option>
+                                <option value="inactive" <?php if ($branch['status'] == 'inactive')
+                                    echo 'selected'; ?>>
+                                    Inactive</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -176,7 +203,8 @@ if (isset($_GET['id'])) {
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Update Branch</button>
+                    <button type="submit" class="btn btn-primary" id="submit-btn"
+                        onclick="this.disabled=true; this.form.submit();">Update Branch</button>
                 </form>
             </main>
         </div>
@@ -186,4 +214,5 @@ if (isset($_GET['id'])) {
 </body>
 
 <?php include '../includes/footer.php'; ?>
+
 </html>

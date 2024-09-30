@@ -8,6 +8,13 @@ if (!isset($_SESSION['username'])) {
 <?php
 
 include '../includes/db.php';
+include '../superadmin/log_activity.php';
+
+if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
+    logActivity($_SESSION['user_id'], $_SESSION['username'], "Delete data of Branch");
+} else {
+    error_log("User not logged in or missing session data for logging.");
+}
 
 // Check if branch_id is provided via GET request
 if (isset($_GET['id'])) {

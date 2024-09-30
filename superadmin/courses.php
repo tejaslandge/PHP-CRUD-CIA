@@ -13,6 +13,18 @@ include '../includes/header.php';
 // Query to fetch data from the branches table
 $sql = "SELECT * FROM courses";
 $result = mysqli_query($conn, $sql);
+
+
+
+// Error Handle 
+error_reporting(E_ALL);
+ini_set("Display_error",0);
+
+function error_display($errno, $errstr, $errfile, $errline){
+    $message = "Error : $errno ,Error Message : $errstr,Error_file:$errfile ,Error_line : $errline";
+    error_log($message . PHP_EOL,3,"../error/error_log.txt");
+}
+set_error_handler(callback: "error_display");
 ?>
     <link rel="icon" type="image" href="../assets/cia1.png" />
 
@@ -65,11 +77,8 @@ $result = mysqli_query($conn, $sql);
                                         echo '<td>';
                                         if ($row['status'] == 'active') {
                                             echo '<span class="badge bg-success">Active</span>';
-                                        } elseif( $row['status'] == 'completed') {
-                                            echo '<span class="badge bg-warning">Completed</span>';
-                                        }
-                                         else{
-                                            echo '<span class="badge bg-danger">Cancelled</span>';
+                                        }else{
+                                            echo '<span class="badge bg-danger">Inactive</span>';
                                         }
                                         echo '</td>';
 

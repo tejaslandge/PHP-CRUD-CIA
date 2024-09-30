@@ -55,6 +55,17 @@ $total_pages = ceil($total_records / $records_per_page);
 $ip = $_SERVER['REMOTE_ADDR'];
 // echo 'Hello'.$ip;
 error_log("========IP: $ip=============");
+
+
+
+error_reporting(E_ALL);
+ini_set("Display_error",0);
+
+function error_display($errno, $errstr, $errfile, $errline){
+    $message = "Error : $errno ,Error Message : $errstr,Error_file:$errfile ,Error_line : $errline";
+    error_log($message . PHP_EOL,3,"../error/error_log.txt");
+}
+set_error_handler(callback: "error_display");
 ?>
 
 
@@ -206,9 +217,7 @@ error_log("========IP: $ip=============");
                     </div>
 
                     <div class="form-group mt-4">
-                        <label for="csvFile" class="form-label">
-                            Upload Your CSV File:
-                        </label>
+                        <label for="csvFile" class="form-label">Upload Your CSV File:</label>
                         <input type="file" class="form-control" id="csvFile" name="csvFile" accept=".csv" required>
                     </div>
 
@@ -218,8 +227,7 @@ error_log("========IP: $ip=============");
                             <li class="list-group-item"><strong>branch_name:</strong> Name of the branch</li>
                             <li class="list-group-item"><strong>branch_manager:</strong> Name of the manager</li>
                             <li class="list-group-item"><strong>email:</strong> Branch email address</li>
-                            <li class="list-group-item"><strong>contact_number:</strong> Contact number of the branch
-                            </li>
+                            <li class="list-group-item"><strong>contact_number:</strong> Contact number of the branch</li>
                             <li class="list-group-item"><strong>status:</strong> Active or Inactive</li>
                         </ul>
                     </div>
@@ -234,6 +242,7 @@ error_log("========IP: $ip=============");
 </div>
 
 
+
 <?php
 mysqli_close($conn);
 include '../includes/footer.php';
@@ -241,126 +250,125 @@ include '../includes/footer.php';
 
 <script>
 
-    $(document).ready(function () {
-        // Variables to track sorting order and column
-        var sortColumn = 'branch_id'; // Default sort by branch_id
-        var sortOrder = 'ASC'; // Default sort order
+$(document).ready(function () {
+    // Variables to track sorting order and column
+    var sortColumn = 'branch_id'; // Default sort by branch_id
+    var sortOrder = 'DESC'; // Default sort order
 
-        // Function to load branches with pagination and sorting
-        function loadBranches(page = 1, query = '') {
-            $.ajax({
-                url: "../superadmin/fetch_branches.php",
-                method: "POST",
-                data: {
-                    search_query: query,
-                    page: page,
-                    limit: 6,
-                    sort_column: sortColumn,
-                    sort_order: sortOrder
-                },
-                dataType: 'json', // Expect JSON response
-                success: function (data) {
-                    // Clear the existing table body
-                    var tbody = $('#branchResults tbody');
-                    tbody.empty();
+    // Function to load branches with pagination and sorting
+    function loadBranches(page = 1, query = '') {
+        $.ajax({
+            url: "../superadmin/fetch_branches.php",
+            method: "POST",
+            data: {
+                search_query: query,
+                page: page,
+                limit: 6,
+                sort_column: sortColumn,
+                sort_order: sortOrder
+            },
+            dataType: 'json', // Expect JSON response
+            success: function (data) {
+                // Clear the existing table body
+                var tbody = $('#branchResults tbody');
+                tbody.empty();
 
-                    // Check if data is not empty
-                    if (data.records.length > 0) {
-                        $.each(data.records, function (index, row) {
-                            var statusBadge = row.status === 'active' ?
-                                '<span class="badge bg-success">Active</span>' :
-                                '<span class="badge bg-danger">Inactive</span>';
+                // Check if data is not empty
+                if (data.records.length > 0) {
+                    $.each(data.records, function (index, row) {
+                        var statusBadge = row.status === 'active' ?
+                            '<span class="badge bg-success">Active</span>' :
+                            '<span class="badge bg-danger">Inactive</span>';
 
-                            tbody.append(`
-                        <tr>
-                            <th scope="row">${index + 1}</th>
-                            <td>${row.branch_name}</td>
-                            <td>${row.branch_manager}</td>
-                            <td>${row.email}</td>
-                            <td>${row.contact_number}</td>
-                            <td>${statusBadge}</td>
-                            <td>
-                                <a href="branch_details.php?id=${row.branch_id}">
-                                    <button class="btn btn-warning fas fa-eye"></button>
-                                </a>
-                                <a href="../edit/edit_branch.php?id=${row.branch_id}">
-                                    <button class="btn btn-secondary fas fa-edit"></button>
-                                </a>
-                                <a href="../delete/delete_branch.php?id=${row.branch_id}" onclick="return confirm('Are you sure you want to delete this ${row.branch_name}?');">
-                                    <button class="btn btn-danger fas fa-trash-alt"></button>
-                                </a>
-                            </td>
-                        </tr>
-                    `);
-                        });
+                        tbody.append(`
+                            <tr>
+                                <th scope="row">${index + 1}</th>
+                                <td>${row.branch_name}</td>
+                                <td>${row.branch_manager}</td>
+                                <td>${row.email}</td>
+                                <td>${row.contact_number}</td>
+                                <td>${statusBadge}</td>
+                                <td>
+                                    <a href="branch_details.php?id=${row.branch_id}">
+                                        <button class="btn btn-warning fas fa-eye"></button>
+                                    </a>
+                                    <a href="../edit/edit_branch.php?id=${row.branch_id}">
+                                        <button class="btn btn-secondary fas fa-edit"></button>
+                                    </a>
+                                    <a href="../delete/delete_branch.php?id=${row.branch_id}" onclick="return confirm('Are you sure you want to delete this ${row.branch_name}?');">
+                                        <button class="btn btn-danger fas fa-trash-alt"></button>
+                                    </a>
+                                </td>
+                            </tr>
+                        `);
+                    });
 
-                        // Update pagination
-                        var pagination = $('.pagination');
-                        pagination.empty();
+                    // Update pagination
+                    var pagination = $('.pagination');
+                    pagination.empty();
 
-                        if (data.total_pages > 1) {
-                            if (page > 1) {
-                                pagination.append(`
+                    if (data.total_pages > 1) {
+                        if (page > 1) {
+                            pagination.append(`
                                 <li class="page-item">
                                     <a class="page-link" href="#" data-page="${page - 1}">&laquo;</a>
                                 </li>
                             `);
-                            }
-                            for (var i = 1; i <= data.total_pages; i++) {
-                                pagination.append(`
+                        }
+                        for (var i = 1; i <= data.total_pages; i++) {
+                            pagination.append(`
                                 <li class="page-item ${i === page ? 'active' : ''}">
                                     <a class="page-link" href="#" data-page="${i}">${i}</a>
                                 </li>
                             `);
-                            }
-                            if (page < data.total_pages) {
-                                pagination.append(`
+                        }
+                        if (page < data.total_pages) {
+                            pagination.append(`
                                 <li class="page-item">
                                     <a class="page-link" href="#" data-page="${page + 1}">&raquo;</a>
                                 </li>
                             `);
-                            }
                         }
-                    } else {
-                        tbody.append('<tr><td colspan="7">No branches found.</td></tr>');
                     }
+                } else {
+                    tbody.append('<tr><td colspan="7">No branches found.</td></tr>');
                 }
-            });
-        }
-
-        // On page load, load the first page
-        loadBranches();
-
-        // Search function
-        $('#searchQuery').on('keyup', function () {
-            var query = $(this).val();
-            loadBranches(1, query); // Load first page of search results
-        });
-
-        // Handle sorting
-        $('.sort').on('click', function (e) {
-            e.preventDefault();
-            var column = $(this).data('sort');
-            if (sortColumn === column) {
-                // Toggle sort order if the same column is clicked
-                sortOrder = (sortOrder === 'ASC') ? 'DESC' : 'ASC';
-            } else {
-                // Sort by new column
-                sortColumn = column;
-                sortOrder = 'ASC';
             }
-            loadBranches(1, $('#searchQuery').val()); // Load first page with new sorting
         });
+    }
 
-        // Handle pagination click
-        $(document).on('click', '.pagination a', function (e) {
-            e.preventDefault();
-            var page = $(this).data('page');
-            var query = $('#searchQuery').val();
-            loadBranches(page, query);
-        });
+    // On page load, load the first page
+    loadBranches();
+
+    // Search function
+    $('#searchQuery').on('keyup', function () {
+        var query = $(this).val();
+        loadBranches(1, query); // Load first page of search results
     });
 
+    // Handle sorting
+    $('.sort').on('click', function (e) {
+        e.preventDefault();
+        var column = $(this).data('sort');
+        if (sortColumn === column) {
+            // Toggle sort order if the same column is clicked
+            sortOrder = (sortOrder === 'ASC') ? 'DESC' : 'ASC';
+        } else {
+            // Sort by new column
+            sortColumn = column;
+            sortOrder = 'DESC';
+        }
+        loadBranches(1, $('#searchQuery').val()); // Load first page with new sorting
+    });
+
+    // Handle pagination click
+    $(document).on('click', '.pagination a', function (e) {
+        e.preventDefault();
+        var page = $(this).data('page');
+        var query = $('#searchQuery').val();
+        loadBranches(page, query);
+    });
+});
 
     document.getElementById('exportCSV').addEventListener('click', function () {
         var query = $('#searchQuery').val();
