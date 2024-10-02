@@ -241,7 +241,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="trainer_branch" class="form-label">Trainer Branch</label>
-                                <select class="form-control" id="trainer_branch" name="trainer_branch" required>
+                                <select class="form-control" id="trainer_branch" name="trainer_branch"  required>
                                     <option value="">Select Branch</option>
                                     <?php
                                     // Fetch branches from the branches table

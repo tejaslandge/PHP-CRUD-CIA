@@ -33,11 +33,12 @@ if (isset($_GET['trainer_id'])) {
 
 // Error Handle 
 error_reporting(E_ALL);
-ini_set("Display_error",0);
+ini_set("Display_error", 0);
 
-function error_display($errno, $errstr, $errfile, $errline){
+function error_display($errno, $errstr, $errfile, $errline)
+{
     $message = "Error : $errno ,Error Message : $errstr,Error_file:$errfile ,Error_line : $errline";
-    error_log($message . PHP_EOL,3,"../error/error_log.txt");
+    error_log($message . PHP_EOL, 3, "../error/error_log.txt");
 }
 set_error_handler(callback: "error_display");
 ?>
@@ -69,7 +70,7 @@ set_error_handler(callback: "error_display");
 
             <!-- Main content -->
             <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-               
+
                 <!-- Trainer Profile Card -->
                 <div class="card mb-4">
                     <div class="card-header">
@@ -79,11 +80,12 @@ set_error_handler(callback: "error_display");
                         <div class="row">
                             <!-- Trainer's Photo -->
                             <div class="col-md-4">
-                                <img src="../trainer_profile/<?php echo $trainer['photo']; ?>" alt="Profile Photo" class="img-fluid img-thumbnail">
+                                <img src="../trainer_profile/<?php echo $trainer['photo']; ?>" alt="Profile Photo"
+                                    class="img-fluid img-thumbnail">
                             </div>
 
                             <!-- Trainer's Details -->
-                            <div class="col-md-8">
+                            <div class="col-md-4">
                                 <p><strong>Email:</strong> <?php echo $trainer['email']; ?></p>
                                 <p><strong>Phone Number:</strong> <?php echo $trainer['phone_number']; ?></p>
                                 <p><strong>Expertise:</strong> <?php echo $trainer['expertise']; ?></p>
@@ -91,18 +93,23 @@ set_error_handler(callback: "error_display");
                                 <p><strong>Experience:</strong> <?php echo $trainer['experience_years']; ?> years</p>
                                 <p><strong>Joining Date:</strong> <?php echo $trainer['joining_date']; ?></p>
                                 <p><strong>Branch:</strong> <?php echo $trainer['trainer_branch']; ?></p>
+
+                                <p><strong>Status:</strong> <?php if ($trainer['status'] == 'active') {
+                                    echo '<span class="badge bg-success">Active</span>';
+                                } else {
+                                    echo '<span class="badge bg-danger">Inactive</span>';
+                                } ?></p>
+                            </div>
+                            <div class="col-md-4">
                                 <p><strong>Salary:</strong> <?php echo $trainer['salary']; ?></p>
                                 <p><strong>Address:</strong> <?php echo $trainer['address']; ?></p>
                                 <p><strong>Date of Birth:</strong> <?php echo $trainer['date_of_birth']; ?></p>
                                 <p><strong>Gender:</strong> <?php echo $trainer['gender']; ?></p>
                                 <p><strong>Bio:</strong> <?php echo $trainer['trainer_bio']; ?></p>
                                 <p><strong>Certifications:</strong> <?php echo $trainer['certifications']; ?></p>
-                                <p><strong>Availability Schedule:</strong> <?php echo $trainer['availability_schedule']; ?></p>
-                                <p><strong>Status:</strong> <?php if ($trainer['status'] == 'active') {
-                                    echo '<span class="badge bg-success">Active</span>';
-                                } else {
-                                    echo '<span class="badge bg-danger">Inactive</span>';
-                                }?></p>
+                                <p><strong>Availability Schedule:</strong>
+                                    <?php echo $trainer['availability_schedule']; ?></p>
+
                             </div>
                         </div>
                     </div>

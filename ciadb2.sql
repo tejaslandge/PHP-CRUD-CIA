@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 24, 2024 at 04:28 PM
+-- Generation Time: Oct 02, 2024 at 11:06 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -35,6 +35,23 @@ CREATE TABLE `activity_log` (
   `log_time` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `activity_log`
+--
+
+INSERT INTO `activity_log` (`log_id`, `user_id`, `username`, `action`, `log_time`) VALUES
+(1, 2, 'admin', 'Add data of Course:lnln', '2024-10-01 16:35:07'),
+(2, 2, 'admin', 'Add data of Course:lnln', '2024-10-01 16:36:58'),
+(3, 2, 'admin', 'Delete data of Course', '2024-10-01 16:37:09'),
+(4, 2, 'admin', 'Update  Details of Student : Tejas Landge', '2024-10-01 16:38:03'),
+(5, 2, 'admin', 'Add data of Course:kndnv', '2024-10-01 16:39:39'),
+(6, 2, 'admin', 'Delete data of Course', '2024-10-01 16:40:00'),
+(7, 2, 'admin', 'Add data of Course:kdjb', '2024-10-01 16:44:47'),
+(8, 2, 'admin', 'User logged in', '2024-10-02 08:22:25'),
+(9, 2, 'admin', 'Added a new Task : slideshow', '2024-10-02 08:56:20'),
+(10, 2, 'admin', 'Update Task: slideshow', '2024-10-02 08:59:22'),
+(11, 2, 'admin', 'Delete Task', '2024-10-02 09:04:56');
+
 -- --------------------------------------------------------
 
 --
@@ -60,14 +77,15 @@ CREATE TABLE `branches` (
 --
 
 INSERT INTO `branches` (`branch_id`, `branch_name`, `branch_address`, `city`, `state`, `contact_number`, `email`, `branch_manager`, `date_established`, `status`, `total_employees`) VALUES
-(1, 'CIA Vidyanagar', 'Nagpur', 'Nagpur', 'Maharashtra', '07218420585', 'tejaslandge21@gmail.com', 'Jyoti Raut', '2024-09-01', 'active', 3),
-(3, 'CIA Sadar', 'Nagpur', 'Nagpur', 'Maharashtra', '07218420585', 'tejaslandge21@gmail.com', 'Tejas Landge', '2024-09-05', 'active', 4),
-(4, 'CIA Mumbai', 'Mumbai', 'Mumbai', 'Maharashtra', '07218420585', 'tejaslandge21@gmail.com', 'Harsh Patle', '2024-09-07', 'active', 5),
 (7, 'CIA Sadar', 'Nagpur', 'Nagpur', 'Maharashtra', '7218420585', 'tejaslandge21@gmail.com', 'Jyoti Raut', '2024-09-04', 'active', 32),
-(8, 'CIA Vidyanagar', 'Nagpur', 'East Kameng', 'Arunachal Pradesh', '7218420585', 'tejaslandge21@gmail.com', 'Harsh Patle', '2024-08-28', 'active', 6),
-(9, 'CIA Vidyanagar', NULL, NULL, NULL, '7218420585', 'tejaslandge21@gmail.com', 'Jyoti Raut', NULL, 'active', NULL),
-(11, 'CIA Mumbai', NULL, NULL, NULL, '7218420585', 'tejaslandge21@gmail.com', 'Harsh Patle', NULL, 'active', NULL),
-(13, 'CIA Sadar', NULL, NULL, NULL, '7218420585', 'tejaslandge21@gmail.com', 'Jyoti Raut', NULL, 'active', NULL);
+(13, 'CIA Sadar', 'Nagpur', 'Nagpur', 'Maharashtra', '9172007007', 'jyoti@gmail.com', 'Jyoti Raut', '2024-09-14', 'active', 4),
+(71, 'ZZZADAA', 'Nagpur', 'Biswanath', 'Assam', '7218420585', 'asd@gmail.com', 'sdvs', '2024-09-04', 'active', 3),
+(72, 'Isapur', 'Nagpur', 'Nagpur', 'Maharashtra', '2433123456', 'lkjhg21@gmail.com', 'da', '2024-09-27', 'active', 4),
+(73, 'CIA Vidyanagar', 'Nagpur', 'Nagpur', 'Maharashtra', '9172007007', 'codeinsightacademy@gmail.com', 'Jyoti Raut', '2020-12-28', 'active', 3),
+(74, 'svdsv', 'sdvvsv', 'Barpeta', 'Assam', '2132435323', 'adc@gmail.com', 'dcsvs', '2024-08-28', 'active', 5),
+(76, 'CIA Sadar', 'sdvsdc ', 'Bhiwani', 'Haryana', '5632424353', 'sdjbcskjb@gmail.com', 'da', '2024-08-30', 'active', 5),
+(77, 'mumbai', 'Nagpur', 'Mumbai', 'Maharashtra', '9172007007', 'jsdkjb@gmail.com', 'dvjbsdj', '2024-09-10', 'active', 5),
+(78, 'Nashik', 'djbcdjsab', 'Nashik', 'Maharashtra', '3421314564', 'cscsk@gmail.com', 'kfouwgu', '2024-09-04', 'active', 5);
 
 -- --------------------------------------------------------
 
@@ -81,7 +99,7 @@ CREATE TABLE `courses` (
   `course_description` text DEFAULT NULL,
   `course_duration` int(11) DEFAULT NULL,
   `course_fee` decimal(10,2) DEFAULT NULL,
-  `status` enum('active','completed','cancelled') DEFAULT NULL
+  `status` enum('active','inactive') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -89,14 +107,14 @@ CREATE TABLE `courses` (
 --
 
 INSERT INTO `courses` (`course_id`, `course_name`, `course_description`, `course_duration`, `course_fee`, `status`) VALUES
-(1, 'Web Development', 'Learn HTML, CSS, JavaScript, and more to build websites.', 6, 12000.00, 'active'),
+(1, 'Web Development', 'Learn HTML, CSS, JavaScript, and more to build websites.', 6, 23000.00, 'active'),
 (2, 'Data Science', 'Master data analysis, visualization, and machine learning.', 8, 18000.00, 'active'),
-(3, 'Mobile App Development', 'Create mobile apps using Android or iOS platforms.', 5, 15000.00, 'completed'),
+(3, 'Mobile App Development', 'Create mobile apps using Android or iOS platforms.', 5, 15000.00, 'active'),
 (4, 'Cloud Computing', 'Understand cloud services, infrastructure, and deployment models.', 7, 20000.00, 'active'),
-(5, 'Cybersecurity', 'Learn to secure networks and systems from cyber threats.', 6, 17000.00, 'cancelled'),
-(6, 'C++ Programming', 'nothing', 3, 6000.00, 'completed'),
-(8, 'Python', 'Bohot Maja Aata hai krke dekh ek bar', 6, 10000.00, 'active'),
-(9, 'Internship 2024', 'ABC', 6, 15000.00, 'active');
+(5, 'Cybersecurity', 'Learn to secure networks and systems from cyber threats.', 6, 17000.00, 'active'),
+(6, 'C++ Programming', 'nothing', 3, 6000.00, 'active'),
+(11, 'lnln', 'lknlkn', 4, 50000.00, 'active'),
+(13, 'kdjb', 'bsjb', 3, 5000.00, 'active');
 
 -- --------------------------------------------------------
 
@@ -133,9 +151,8 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`student_id`, `first_name`, `last_name`, `email`, `phone_number`, `course_name`, `date_of_birth`, `gender`, `address`, `city`, `state`, `postal_code`, `enrollment_date`, `status`, `fees_paid`, `total_fees`, `balance_fees`, `guardian_name`, `guardian_contact`, `profile`, `remarks`) VALUES
-(1, 'Tejas', 'Landge', 'tejaslandge21@gmail.com', '07218420585', 'C++ Programming', '2024-09-10', 'male', 'Nagpur', 'Nagpur', 'Maharashtra', '441113', '2024-09-04', NULL, NULL, NULL, NULL, 'Prakash Landge', '0987656789', 'stdImg (19).jpeg', 'Add Something'),
-(2, 'Harsh', 'Patle', 'harsh@g.com', '3453212432', 'FullStack Development', '2024-09-05', 'male', 'Koradi', 'Nagpur', 'Maharashtra', '441113', '2024-09-13', NULL, NULL, NULL, NULL, 'Tejas', '87656787623', 'stdImg (15).jpeg', 'Nothing'),
-(3, 'Darshan', 'Narekar', 'd@g', 'abc', 'sdfd', '2024-09-13', 'male', 'Nagpur', 'Nagpur', 'Maharashtra', '441113', '2024-09-13', NULL, NULL, NULL, NULL, 'NA', '123245655', 'stdImg (20).jpeg', '');
+(1, 'Tejas', 'Landge', 'tejaslandge21@gmail.com', '07218420585', 'C++ Programming', '2024-09-10', 'male', 'at ispaur post pipla d.b. tah saoner dist. nagpur state maharashtra,country india 441113', 'Nagpur', 'Maharashtra', '441113', '2024-09-04', 'active', 3500.00, 6000.00, 2500.00, 'Prakash Landge', '0987656789', 'stdImg (19).jpeg', 'i dont want'),
+(4, 'Tejas', 'Landge', 'tejaslandge21@gmail.com', '07218420585', 'C++ Programming', '2024-08-27', 'male', 'Nagpur', 'Nagpur', 'Maharashtra', '441113', '2024-09-12', 'active', 3500.00, 6000.00, 2000.00, 'Prakash Landge', '0987656789', '_MG_7868.JPG', 'ioewfhi');
 
 -- --------------------------------------------------------
 
@@ -145,22 +162,14 @@ INSERT INTO `students` (`student_id`, `first_name`, `last_name`, `email`, `phone
 
 CREATE TABLE `task_sheet` (
   `task_id` int(11) NOT NULL,
-  `employee_id` int(11) DEFAULT NULL,
-  `task_name` varchar(255) DEFAULT NULL,
+  `task_name` varchar(255) NOT NULL,
   `task_description` text DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `due_date` date DEFAULT NULL,
   `completion_date` date DEFAULT NULL,
-  `task_status` enum('pending','in progress','completed','delayed') DEFAULT NULL,
-  `priority_level` enum('low','medium','high') DEFAULT NULL,
-  `assigned_by` int(11) DEFAULT NULL,
-  `remarks` text DEFAULT NULL,
-  `monthly_report_id` int(11) DEFAULT NULL,
-  `progress_percentage` decimal(5,2) DEFAULT NULL,
-  `hours_spent` decimal(5,2) DEFAULT NULL,
-  `task_category` varchar(255) DEFAULT NULL,
-  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `attachments` varchar(255) DEFAULT NULL
+  `task_status` varchar(50) DEFAULT NULL,
+  `priority_level` varchar(50) DEFAULT NULL,
+  `remarks` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -179,7 +188,7 @@ CREATE TABLE `trainers` (
   `qualification` varchar(255) DEFAULT NULL,
   `experience_years` int(11) DEFAULT NULL,
   `joining_date` date DEFAULT NULL,
-  `branch_id` int(11) DEFAULT NULL,
+  `trainer_branch` varchar(255) NOT NULL,
   `status` enum('active','inactive') DEFAULT NULL,
   `salary` decimal(10,2) DEFAULT NULL,
   `photo` varchar(255) DEFAULT NULL,
@@ -195,9 +204,15 @@ CREATE TABLE `trainers` (
 -- Dumping data for table `trainers`
 --
 
-INSERT INTO `trainers` (`trainer_id`, `first_name`, `last_name`, `email`, `phone_number`, `expertise`, `qualification`, `experience_years`, `joining_date`, `branch_id`, `status`, `salary`, `photo`, `address`, `date_of_birth`, `gender`, `trainer_bio`, `certifications`, `availability_schedule`) VALUES
-(1, 'Tejas', 'Landge', 'tejaslandge21@gmail.com', '07218420585', 'Python', 'MSC', 1, '2023-11-06', 1, NULL, 15000.00, '../trainer_profile/trainer_66eb9f6570aee4.59592733.jpeg', 'Nagpur', '2002-06-21', 'male', 'Nothing to say', 'Python PHP', 'Monday to Friday 12pm to 5pm'),
-(2, 'Aman', 'ssss', 'tejas@gmail.com', '07218420585', 'Python', 'MSC', 2, '2024-09-07', NULL, 'inactive', 15000.00, '../trainer_profile/trainer_66eba4c23e1966.81724457.jpeg', 'Nagpur', '2024-09-03', 'male', 'wdefrgt', 'afds', 'adfs');
+INSERT INTO `trainers` (`trainer_id`, `first_name`, `last_name`, `email`, `phone_number`, `expertise`, `qualification`, `experience_years`, `joining_date`, `trainer_branch`, `status`, `salary`, `photo`, `address`, `date_of_birth`, `gender`, `trainer_bio`, `certifications`, `availability_schedule`) VALUES
+(6, 'Tejas', 'Landge', 'tejaslandge21@gmail.com', '07218420585', 'Python', 'MSC', 3, '2024-09-02', 'CIA Sadar', 'active', 15000.00, 'trainer_66f67eb92de806.50949448.jpeg', 'Nagpur', '2002-06-21', 'male', 'adsc', 'Java', 'Mon to Fri '),
+(7, 'Tejas', 'Landge', 'tejaslandge21@gmail.com', '07218420585', 'jhv', 'khv', 5, '2024-08-28', 'Isapur', 'active', 200000.00, 'trainer_66f693083a6208.33053314.jpeg', 'Nagpur', '2024-08-29', 'male', 'hbhk', 'hv', 'vjv'),
+(8, 'khhwsh', 'gsuhus', 'tejaslandge21@gmail.com', '07218420585', 'sgs', 'ifgdssuhsu', 1, '2332-06-05', 'CIA Sadar', 'active', 7666.00, 'trainer_66f6935166a583.55424825.jpeg', 'Nagpur', '3434-04-04', 'male', 'jgfjg', 'hg', 'fdf'),
+(9, 'slfvjsssds', 'sdfs', 'tejaslandge21@gmail.com', '3432343232', 'gfdveg', 'rgfge', 3, '1211-12-21', 'CIA Sadar', 'active', 121211.00, 'trainer_66f693db913bb5.30841740.jpeg', 'Nagpur', '2024-08-29', 'male', 'wrgew', 'wefw', 'wef'),
+(10, 'wegwge', 'Landge', 'tejaslandge21@gmail.com', '07218420585', 'wefwsf', 'weffw', 3, '2024-09-13', 'Isapur', 'active', 324234.00, 'trainer_66f6941fb8ea73.51373284.jpeg', 'Nagpur', '2024-09-19', 'male', 'wrf', 'wefrw', 'wef'),
+(11, 'rwfgw', 'werf', 'asda@g.com', '07218420585', 'fdv', 'ergf', 3, '2024-09-13', 'CIA Sadar', 'active', 2332.00, 'trainer_66f6946f17df93.38867198.jpeg', 'Nagpur', '2024-09-04', 'male', 'ergf', 'df', 'fsv'),
+(12, 'Suraj', 'Meshram', 'suraj@gmai.com', '7656567224', 'Python', 'MSC', 2, '2024-09-30', 'CIA Sadar', 'active', 15000.00, 'trainer_66fc13133be692.88685231.jpeg', 'Nagpur', '2004-06-16', 'male', 'nothing', 'Javascript', 'monday to friday'),
+(13, 'Tejas', 'Landge', 'tejaslandge21@gmail.com', '7218420585', 'Python', 'MSC', 1, '2023-11-06', 'CIA Vidyanagar', 'active', 15000.00, 'trainer_66f7a8c6cd53f9.00473377.JPG', 'at ispaur post pipla d.b. tah saoner dist. nagpur state maharashtra,country india 441113', '2002-06-21', 'male', 'nothing', 'java python etc', 'Mon to Fri ');
 
 -- --------------------------------------------------------
 
@@ -219,8 +234,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `status`, `updated_at`) VALUES
-(1, 'tejaslandge', 'tejaslandge21@gmail.com', 'Tejas@123', 'active', '2024-09-24 08:29:03'),
-(2, 'admin', 'admin@gmail.com', '321', 'active', '2024-09-24 12:19:25');
+(1, 'tejaslandge', 'tejaslandge21@gmail.com', 'asd', 'active', '2024-09-27 04:28:01'),
+(2, 'admin', 'admin@gmail.com', '123', 'active', '2024-09-28 07:01:29');
 
 --
 -- Indexes for dumped tables
@@ -254,16 +269,13 @@ ALTER TABLE `students`
 -- Indexes for table `task_sheet`
 --
 ALTER TABLE `task_sheet`
-  ADD PRIMARY KEY (`task_id`),
-  ADD KEY `employee_id` (`employee_id`),
-  ADD KEY `assigned_by` (`assigned_by`);
+  ADD PRIMARY KEY (`task_id`);
 
 --
 -- Indexes for table `trainers`
 --
 ALTER TABLE `trainers`
-  ADD PRIMARY KEY (`trainer_id`),
-  ADD KEY `branch_id` (`branch_id`);
+  ADD PRIMARY KEY (`trainer_id`);
 
 --
 -- Indexes for table `users`
@@ -279,60 +291,43 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `branches`
 --
 ALTER TABLE `branches`
-  MODIFY `branch_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `branch_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `course_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `course_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `task_sheet`
 --
 ALTER TABLE `task_sheet`
-  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `trainers`
 --
 ALTER TABLE `trainers`
-  MODIFY `trainer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `trainer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `task_sheet`
---
-ALTER TABLE `task_sheet`
-  ADD CONSTRAINT `task_sheet_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `trainers` (`trainer_id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `task_sheet_ibfk_2` FOREIGN KEY (`assigned_by`) REFERENCES `trainers` (`trainer_id`) ON DELETE SET NULL;
-
---
--- Constraints for table `trainers`
---
-ALTER TABLE `trainers`
-  ADD CONSTRAINT `trainers_ibfk_1` FOREIGN KEY (`branch_id`) REFERENCES `branches` (`branch_id`) ON DELETE SET NULL;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

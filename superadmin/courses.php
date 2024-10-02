@@ -11,7 +11,7 @@ include '../includes/header.php';
 
 
 // Query to fetch data from the branches table
-$sql = "SELECT * FROM courses";
+$sql = "SELECT * FROM courses ORDER BY course_id DESC";
 $result = mysqli_query($conn, $sql);
 
 
@@ -37,6 +37,9 @@ set_error_handler(callback: "error_display");
         </nav>
         <!-- Main content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <?php
+            // echo $_SESSION['succmsg'];
+            ?>
             <div
                 class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Courses</h1>

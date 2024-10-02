@@ -29,14 +29,14 @@ if (isset($_GET['id'])) {
 
         <!-- Main content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <h2>Student Details: <?php echo $student['first_name'] . ' ' . $student['last_name']; ?></h2>
+            <h2><?php echo $student['first_name'] . ' ' . $student['last_name']; ?></h2>
 
             <div class="row">
                 <div class="col-md-4">
                     <img src="../student_profile/<?php echo $student['profile']; ?>" alt="Profile Photo"
                         class="img-fluid img-thumbnail">
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-4">
                     <table class="table table-striped">
                         <tr>
                             <th>Student ID:</th>
@@ -75,6 +75,12 @@ if (isset($_GET['id'])) {
                             <th>City:</th>
                             <td><?php echo $student['city']; ?></td>
                         </tr>
+
+
+                    </table>
+                </div>
+                <div class="col-md-4">
+                    <table class="table table-striped">
                         <tr>
                             <th>State:</th>
                             <td><?php echo $student['state']; ?></td>
@@ -116,11 +122,11 @@ if (isset($_GET['id'])) {
                             <td><?php echo $student['remarks']; ?></td>
                         </tr>
                     </table>
-                    <a href="edit_student.php?id=<?php echo $student['student_id']; ?>" class="btn btn-primary">Edit
-                        Student</a>
+                    <a href="../edit/edit_student.php?id=<?php echo $student['student_id']; ?>" class="btn btn-primary">Edit
+                        </a>
                     <a href="../superadmin/students.php" class="btn btn-secondary">Back</a>
-
                 </div>
+
             </div>
         </main>
     </div>

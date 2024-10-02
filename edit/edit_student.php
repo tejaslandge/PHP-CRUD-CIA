@@ -7,6 +7,10 @@ if (!isset($_SESSION['username'])) {
 
 include '../includes/db.php';
 include '../includes/header.php';
+include '../superadmin/log_activity.php';
+
+
+
 
 // Fetch student details to edit
 if (isset($_GET['id'])) {
@@ -72,6 +76,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         WHERE student_id = '$student_id'";
 
     if (mysqli_query($conn, $update_sql)) {
+        if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
+            logActivity($_SESSION['user_id'], $_SESSION['username'], "Update  Details of Student : $first_name $last_name");
+        }
         // header('Location: ../superadmin/students.php');
         echo "<script>window.location.href = '../superadmin/students.php';</script>";
     } else {
@@ -134,9 +141,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="col-md-6">
                         <label for="gender" class="form-label">Gender</label>
                         <select class="form-control" id="gender" name="gender" required>
-                            <option value="Male" <?php if ($student['gender'] == 'Male') echo 'selected'; ?>>Male</option>
-                            <option value="Female" <?php if ($student['gender'] == 'Female') echo 'selected'; ?>>Female</option>
-                            <option value="Other" <?php if ($student['gender'] == 'Other') echo 'selected'; ?>>Other</option>
+                            <option value="Male" <?php if ($student['gender'] == 'Male')
+                                echo 'selected'; ?>>Male</option>
+                            <option value="Female" <?php if ($student['gender'] == 'Female')
+                                echo 'selected'; ?>>Female
+                            </option>
+                            <option value="Other" <?php if ($student['gender'] == 'Other')
+                                echo 'selected'; ?>>Other
+                            </option>
                         </select>
                     </div>
                     <div class="col-md-6">
@@ -173,61 +185,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="fees_paid" class="form-label">Fees Paid</label>
-                        <input type="number" class="form-control" id="fees_paid" name="fees_paid"
-                            value="<?php echo $student['fees_paid']; ?>" required>
-                    </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label for="total_fees" class="form-label">Total Fees</label>
                         <input type="number" class="form-control" id="total_fees" name="total_fees"
-                            value="<?php echo $student['total_fees']; ?>" required>
+                            value="<?php echo $student['total_fees']; ?>" required oninput="calculateBalance()">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="fees_paid" class="form-label">Fees Paid</label>
+                        <input type="number" class="form-control" id="fees_paid" name="fees_paid"
+                            value="<?php echo $student['fees_paid']; ?>" required oninput="calculateBalance()">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="balance_fees" class="form-label">Balance Fees</label>
+                        <input type="number" class="form-control" id="balance_fees" name="balance_fees"
+                            value="<?php echo $student['balance_fees']; ?>" required readonly>
                     </div>
                 </div>
 
+
+
+
                 <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="balance_fees" class="form-label">Balance Fees</label>
-                        <input type="number" class="form-control" id="balance_fees" name="balance_fees"
-                            value="<?php echo $student['balance_fees']; ?>" required>
-                    </div>
                     <div class="col-md-6">
                         <label for="guardian_name" class="form-label">Guardian Name</label>
                         <input type="text" class="form-control" id="guardian_name" name="guardian_name"
                             value="<?php echo $student['guardian_name']; ?>" required>
                     </div>
-                </div>
-
-                <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="guardian_contact" class="form-label">Guardian Contact</label>
                         <input type="text" class="form-control" id="guardian_contact" name="guardian_contact"
                             value="<?php echo $student['guardian_contact']; ?>" required>
                     </div>
-                    <div class="col-md-6">
-                        <label for="status" class="form-label">Status</label>
-                        <select class="form-control" id="status" name="status" required>
-                            <option value="Active" <?php if ($student['status'] == 'Active') echo 'selected'; ?>>Active
-                            </option>
-                            <option value="Inactive" <?php if ($student['status'] == 'Inactive') echo 'selected'; ?>>Inactive
-                            </option>
-                        </select>
-                    </div>
+
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="profile" class="form-label">Profile Photo</label>
-                        <input type="file" class="form-control" id="profile" name="profile">
-                        <?php if (!empty($student['profile'])) : ?>
-                            <img src="../student_profile/<?php echo $student['profile']; ?>" alt="Profile Photo"
-                                class="img-thumbnail" width="150">
-                        <?php endif; ?>
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-control" id="status" name="status" required>
+                            <option value="Active" <?php if ($student['status'] == 'Active')
+                                echo 'selected'; ?>>Active
+                            </option>
+                            <option value="Inactive" <?php if ($student['status'] == 'Inactive')
+                                echo 'selected'; ?>>Inactive
+                            </option>
+                        </select>
                     </div>
+
                     <div class="col-md-6">
                         <label for="remarks" class="form-label">Remarks</label>
                         <textarea class="form-control" id="remarks" name="remarks" rows="3"
                             required><?php echo $student['remarks']; ?></textarea>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="profile" class="form-label">Profile Photo</label>
+                        <input type="file" class="form-control" id="profile" name="profile">
+                        <?php if (!empty($student['profile'])): ?>
+                            <img src="../student_profile/<?php echo $student['profile']; ?>" alt="Profile Photo"
+                                class="img-thumbnail" width="150">
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -237,5 +256,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </main>
     </div>
 </div>
+<script>
+    function calculateBalance() {
+        var feesPaid = document.getElementById('fees_paid').value;
+        var totalFees = document.getElementById('total_fees').value;
 
+        var balanceFees = totalFees - feesPaid;
+
+        document.getElementById('balance_fees').value = balanceFees;
+    }
+</script>
 <?php include '../includes/footer.php'; ?>

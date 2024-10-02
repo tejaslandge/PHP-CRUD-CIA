@@ -12,7 +12,7 @@ if (isset($_GET['id'])) {
 
     if (mysqli_query($conn, $sql)) {
         if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
-            logActivity($_SESSION['user_id'], $_SESSION['username'], "Delete student record ");
+            logActivity($_SESSION['user_id'], $_SESSION['username'], "Delete student record");
         }
         header('Location: ../superadmin/students.php');
     } else {

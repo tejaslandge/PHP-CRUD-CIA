@@ -11,7 +11,7 @@ include '../includes/db.php';
 include '../superadmin/log_activity.php';
 
 if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
-    logActivity($_SESSION['user_id'], $_SESSION['username'], "Delete data of Branch");
+    logActivity($_SESSION['user_id'], $_SESSION['username'], "Delete data of Branch:$branch_name");
 } else {
     error_log("User not logged in or missing session data for logging.");
 }

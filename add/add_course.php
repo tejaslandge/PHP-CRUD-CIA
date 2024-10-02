@@ -23,9 +23,7 @@ include '../includes/header.php';
 include '../superadmin/log_activity.php';
 
 
-if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
-    logActivity($_SESSION['user_id'], $_SESSION['username'], "Add data of Course");
-}
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $course_name = $_POST['course_name'];
@@ -39,9 +37,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             VALUES ('$course_name', '$course_description', '$course_duration', '$course_fee', '$status')";
 
     if (mysqli_query($conn, $sql)) {
-        echo "New course added successfully!";
+        $_SESSION['succmsg']= "<div class='alert alert-success'>New course added successfully!</div>";
+        
+        if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
+            logActivity($_SESSION['user_id'], $_SESSION['username'], "Add data of Course:$course_name");
+        }
+        // header('Location:../superadmin/courses.php  ');
+        echo "<script>window.location.href = '../superadmin/courses.php';</script>";
 
-        header('Location:../superadmin/courses.php  ');
     } else {
         echo "Error: " . mysqli_error($conn);
     }

@@ -22,7 +22,7 @@ if (isset($_GET['id'])) {
         
         // Log activity if deletion is successful
         if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
-            logActivity($_SESSION['user_id'], $_SESSION['username'], "Deleted trainer with ID: $trainer_name");
+            logActivity($_SESSION['user_id'], $_SESSION['username'], "Deleted trainer record");
         }
         header('Location: ../superadmin/trainers.php?msg=Trainer deleted successfully');
     } else {

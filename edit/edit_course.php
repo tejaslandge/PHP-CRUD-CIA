@@ -22,9 +22,7 @@ include '../includes/header.php';
 include '../superadmin/log_activity.php';
 
 
-if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
-    logActivity($_SESSION['user_id'], $_SESSION['username'], "Edit data of Course");
-}
+
 
 $course_id = $_GET['id'];
 
@@ -44,6 +42,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (mysqli_query($conn, $sql)) {
         echo "Course updated successfully!";
+        if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
+            logActivity($_SESSION['user_id'], $_SESSION['username'], "Edit data of Course : $course_name");
+        }
         // header('Location:../superadmin/courses.php');
         echo "<script>window.location.href = '../superadmin/courses.php';</script>";
 

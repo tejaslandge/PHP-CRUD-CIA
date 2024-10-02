@@ -54,7 +54,7 @@ set_error_handler(callback: "error_display");
         <!-- Main content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="container">
-                <h1 class="mt-5">Branch Details</h1>
+                <h1 class="mt-0"> Branch Name : <?php echo  $branch['branch_name'] ?></h1>
 
                 <table class="table table-bordered mt-4">
                     <tr>

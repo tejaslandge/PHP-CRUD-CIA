@@ -4,8 +4,6 @@ if (!isset($_SESSION['username'])) {
     header('Location: ../superadmin/login_form.php'); // Redirect to login if not logged in
     exit;
 }
-?>
-<?php
 
 // Error Handle 
 error_reporting(E_ALL);
@@ -16,17 +14,13 @@ function error_display($errno, $errstr, $errfile, $errline)
     $message = "Error : $errno ,Error Message : $errstr,Error_file:$errfile ,Error_line : $errline";
     error_log($message . PHP_EOL, 3, "../error/error_log.txt");
 }
-set_error_handler(callback: "error_display");
-
+set_error_handler("error_display");
 
 // Include your database connection file
 include '../includes/db.php';
 include '../superadmin/log_activity.php';
 
 
-if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
-    logActivity($_SESSION['user_id'], $_SESSION['username'], "Add data of Students");
-}
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -45,6 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $enrollment_date = mysqli_real_escape_string($conn, $_POST['enrollment_date']);
     $guardian_name = mysqli_real_escape_string($conn, $_POST['guardian_name']);
     $guardian_contact = mysqli_real_escape_string($conn, $_POST['guardian_contact']);
+    $fees_paid = mysqli_real_escape_string($conn, $_POST['fees_paid']);
+    $total_fees = mysqli_real_escape_string($conn, $_POST['total_fees']);
+    $balance_fees = $total_fees - $fees_paid; // Calculate balance fees
     $remarks = mysqli_real_escape_string($conn, $_POST['remarks']);
 
     // Handling file upload for profile picture
@@ -57,12 +54,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Insert data into the database
-    $sql = "INSERT INTO students (first_name, last_name, email, phone_number, course_name, date_of_birth, gender, address, city, state, postal_code, enrollment_date, guardian_name, guardian_contact, profile, remarks)
-            VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$course_name', '$date_of_birth', '$gender', '$address', '$city', '$state', '$postal_code', '$enrollment_date', '$guardian_name', '$guardian_contact', '$profile_picture', '$remarks')";
+    $sql = "INSERT INTO students (first_name, last_name, email, phone_number, course_name, date_of_birth, gender, address, city, state, postal_code, enrollment_date, guardian_name, guardian_contact, fees_paid, total_fees, balance_fees, profile, remarks)
+            VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$course_name', '$date_of_birth', '$gender', '$address', '$city', '$state', '$postal_code', '$enrollment_date', '$guardian_name', '$guardian_contact', '$fees_paid', '$total_fees', '$balance_fees', '$profile_picture', '$remarks')";
 
     if (mysqli_query($conn, $sql)) {
-
         echo "<div class='alert alert-success'>Student added successfully!</div>";
+        if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
+            logActivity($_SESSION['user_id'], $_SESSION['username'], "Add data of Student:$first_name $last_name");
+        }
         header("location:../superadmin/students.php");
     } else {
         echo "<div class='alert alert-danger'>Error: " . mysqli_error($conn) . "</div>";
@@ -80,11 +79,9 @@ mysqli_close($conn);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Student Details</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<?php
-include('../includes/header.php')
 
-    ?>
+</head>
+<?php include('../includes/header.php'); ?>
 
 <body>
     <div class="container-fluid">
@@ -97,8 +94,6 @@ include('../includes/header.php')
 
             <!-- Main content -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-
-
                 <div class="container mt-0">
                     <h2 class="">Add New Student</h2>
                     <form action="" method="POST" enctype="multipart/form-data">
@@ -125,8 +120,11 @@ include('../includes/header.php')
                         <div class="row mb-3">
                             <div class="col">
                                 <label for="course_name" class="form-label">Course Name</label>
-                                <input type="text" name="course_name" class="form-control" required>
-                               
+                                <input type="text" id="course_name" name="course_name" class="form-control" required
+                                    list="course_list">
+                                <datalist id="course_list">
+                                    <!-- Options will be populated dynamically -->
+                                </datalist>
                             </div>
                             <div class="col">
                                 <label for="date_of_birth" class="form-label">Date of Birth</label>
@@ -179,32 +177,71 @@ include('../includes/header.php')
                         </div>
                         <div class="row mb-3">
                             <div class="col">
+                                <label for="total_fees" class="form-label">Total Fees</label>
+                                <input type="number" id="total_fees" name="total_fees" class="form-control" required
+                                    oninput="calculateBalance()">
+                            </div>
+                            <div class="col">
+                                <label for="fees_paid" class="form-label">Fees Paid</label>
+                                <input type="number" id="fees_paid" name="fees_paid" class="form-control" required
+                                    oninput="calculateBalance()">
+                            </div>
+                            <div class="col">
+                                <label for="balance_fees" class="form-label">Balance Fees</label>
+                                <input type="number" id="balance_fees" name="balance_fees" class="form-control"
+                                    readonly>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
                                 <label for="profile" class="form-label">Profile Picture</label>
-                                <input type="file" name="profile" class="form-control">
+                                <input type="file" name="profile" class="form-control" accept="image/*">
                             </div>
                             <div class="col">
                                 <label for="remarks" class="form-label">Remarks</label>
-                                <textarea name="remarks" class="form-control"></textarea>
+                                <textarea name="remarks" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary mb-5">Add Student</button>
+                        <button type="submit" class="btn btn-primary mb-3">Add Student</button>
                     </form>
                 </div>
-
             </main>
         </div>
     </div>
-    </div>
-
+<?php
+include '../includes/footer.php';
+?>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetchCourses();
+    });
 
+    function fetchCourses() {
+        fetch('../add/fetch_courses.php')
+            .then(response => response.json())
+            .then(data => {
+                const datalist = document.getElementById('course_list');
+                datalist.innerHTML = ''; // Clear existing options
 
-<?php
-include('../includes/footer.php')
+                data.forEach(course => {
+                    const option = document.createElement('option');
+                    option.value = course;
+                    datalist.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching courses:', error));
+    }
 
-    ?>
+    function calculateBalance() {
+        const feesPaid = parseFloat(document.getElementById('fees_paid').value) || 0;
+        const totalFees = parseFloat(document.getElementById('total_fees').value) || 0;
+        const balanceFees = totalFees - feesPaid;
+        document.getElementById('balance_fees').value = balanceFees.toFixed(2); // Display 2 decimal places
+    }
+</script>

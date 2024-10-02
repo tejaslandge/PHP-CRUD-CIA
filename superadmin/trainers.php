@@ -116,7 +116,7 @@ set_error_handler("error_display");
                         while ($row = $result->fetch_assoc()) {
                             echo '<tr>';
                             echo '<td>' . $srno . '</td>';
-                            echo '<td><img src="../trainer_profile/' . htmlspecialchars($row['photo']) . '" height="100" width="100" alt="' . htmlspecialchars($row['first_name']) . '"></td>';
+                            echo '<td><img src="../trainer_profile/' . htmlspecialchars($row['photo']) . '" height="100" width="100" alt="' . htmlspecialchars($row['first_name']) . '"style="border-radius:20px;"></td>';
                             echo '<td>' . htmlspecialchars($row['first_name']) . ' ' . htmlspecialchars($row['last_name']) . '</td>';
                             echo '<td>' . htmlspecialchars($row['phone_number']) . '</td>';
                             echo '<td>' . htmlspecialchars($row['email']) . '</td>';
