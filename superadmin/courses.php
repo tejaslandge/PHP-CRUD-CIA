@@ -15,18 +15,21 @@ $sql = "SELECT * FROM courses ORDER BY course_id DESC";
 $result = mysqli_query($conn, $sql);
 
 
-
 // Error Handle 
 error_reporting(E_ALL);
-ini_set("Display_error",0);
+ini_set("Display_error", 0);
 
-function error_display($errno, $errstr, $errfile, $errline){
+function error_display($errno, $errstr, $errfile, $errline)
+{
     $message = "Error : $errno ,Error Message : $errstr,Error_file:$errfile ,Error_line : $errline";
-    error_log($message . PHP_EOL,3,"../error/error_log.txt");
+    error_log($message . PHP_EOL, 3, "../error/error_log.txt");
 }
 set_error_handler(callback: "error_display");
 ?>
     <link rel="icon" type="image" href="../assets/cia1.png" />
+
+    <!-- Include Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <!-- Dashboard Container -->
 <div class="container-fluid">
@@ -37,6 +40,18 @@ set_error_handler(callback: "error_display");
         </nav>
         <!-- Main content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <?php if (isset($_SESSION['addcourse'])): ?>
+                <?php echo $_SESSION['addcourse']; ?>
+                <?php unset($_SESSION['addcourse']); ?>
+            <?php endif; ?>
+            <?php if (isset($_SESSION['editcourse'])): ?>
+                <?php echo $_SESSION['editcourse']; ?>
+                <?php unset($_SESSION['editcourse']); ?>
+            <?php endif; ?>
+            <?php if (isset($_SESSION['delcourse'])): ?>
+                <?php echo $_SESSION['delcourse']; ?>
+                <?php unset($_SESSION['delcourse']); ?>
+            <?php endif; ?>
             <?php
             // echo $_SESSION['succmsg'];
             ?>
@@ -60,7 +75,6 @@ set_error_handler(callback: "error_display");
                                     <th scope="col">Course Duration</th>
                                     <th scope="col">Course Fees</th>
                                     <th scope="col">Status</th>
-
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -73,27 +87,29 @@ set_error_handler(callback: "error_display");
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         echo '<tr>';
                                         echo '<th scope="row">' . $srno . '</th>';
-                                        echo '<td>' . $row['course_name']. '</td>';
-                                        echo '<td>' . $row['course_description']. '</td>';
+                                        echo '<td>' . $row['course_name'] . '</td>';
+                                        echo '<td>' . $row['course_description'] . '</td>';
                                         echo '<td>' . $row['course_duration'] . '</td>';
                                         echo '<td>' . $row['course_fee'] . '</td>';
                                         echo '<td>';
                                         if ($row['status'] == 'active') {
                                             echo '<span class="badge bg-success">Active</span>';
-                                        }else{
+                                        } else {
                                             echo '<span class="badge bg-danger">Inactive</span>';
                                         }
                                         echo '</td>';
 
                                         echo '<td>
-                                        <a href="course_details.php?id=' . $row['course_id'] . '"><button class="btn btn-warning fas fa-eye"></button></a>
-                                         <a href="../edit/edit_course.php?id=' . $row['course_id'] . '">
-                                                <button class="btn btn-secondary fas fa-edit"></button>
-                                        </a>
-                                        <a href="../delete/delete_course.php?id=' . $row['course_id'] . '" onclick="return confirm(\'Are you sure you want to delete this ' . $row['course_name'].'?\');">
-                                                <button class="btn btn-danger fas fa-trash-alt"></button>
-                                        </a>
-                                </td>';
+                                            <a href="course_details.php?id=' . $row['course_id'] . '">
+                                                <button class="btn btn-warning"><i class="fas fa-eye"></i></button>
+                                            </a>
+                                            <a href="../edit/edit_course.php?id=' . $row['course_id'] . '">
+                                                <button class="btn btn-secondary"><i class="fas fa-edit"></i></button>
+                                            </a>
+                                            <a href="../delete/delete_course.php?id=' . $row['course_id'] . '" onclick="return confirm(\'Are you sure you want to delete this ' . $row['course_name'] . '?\');">
+                                                <button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                                            </a>
+                                        </td>';
                                         echo '</tr>';
                                         $srno++;
                                     }

@@ -83,6 +83,18 @@ set_error_handler(callback: "error_display");
 
         <!-- Main content -->
         <main class="col-12 col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <?php if (isset($_SESSION['addbranch'])): ?>
+                <?php echo $_SESSION['addbranch']; ?>
+                <?php unset($_SESSION['addbranch']); ?>
+            <?php endif; ?>
+            <?php if (isset($_SESSION['editbranch'])): ?>
+                <?php echo $_SESSION['editbranch']; ?>
+                <?php unset($_SESSION['editbranch']); ?>
+            <?php endif; ?>
+            <?php if (isset($_SESSION['delbranch'])): ?>
+                <?php echo $_SESSION['delbranch']; ?>
+                <?php unset($_SESSION['delbranch']); ?>
+            <?php endif; ?>
             <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <!-- Title Section -->
                 <h2 class="mb-0">Branches</h2>

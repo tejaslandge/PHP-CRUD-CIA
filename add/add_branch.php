@@ -51,11 +51,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
                 logActivity($_SESSION['user_id'], $_SESSION['username'], "Added a new branch : $branch_name");
             }
+            $_SESSION['addbranch']="<div class='alert alert-success'>Added Branch successfully!</div>";
             // Redirect to branches.php after successful insertion
             echo "<script>window.location.href = '../superadmin/branches.php';</script>";
             exit; // Make sure to exit after the redirect
         } else {
-            echo "<script>alert('Error adding branch: " . $conn->error . "');</script>";
+            $_SESSION['addbranch']= "<script>alert('Error adding branch: " . $conn->error . "');</script>";
         }
 
     } else {

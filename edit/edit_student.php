@@ -79,10 +79,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
             logActivity($_SESSION['user_id'], $_SESSION['username'], "Update  Details of Student : $first_name $last_name");
         }
+        $_SESSION['editstd']="<div class='alert alert-success'>Update Student details successfully!</div>";
         // header('Location: ../superadmin/students.php');
         echo "<script>window.location.href = '../superadmin/students.php';</script>";
     } else {
-        echo "Error updating record: " . mysqli_error($conn);
+        $_SESSION['editstd']= "Error updating record: " . mysqli_error($conn);
     }
 }
 ?>

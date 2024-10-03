@@ -128,11 +128,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
             logActivity($_SESSION['user_id'], $_SESSION['username'], "Added a new trainer: $first_name $last_name");
         }
+        $_SESSION['addtrainer']= "<div class='alert alert-success'>Trainer added successfully!</div>";
+
         // Redirect to trainers page
         header("Location: ../superadmin/trainers.php");
         exit();
     } else {
-        echo "Error adding trainer: " . $stmt_insert->error;
+        $_SESSION['addtrainer']= "<div class='alert alert-danger'>Error adding trainer: " . $stmt_insert->error ."</div>";
+
     }
 }
 ?>
@@ -241,7 +244,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     // Loop through each branch and create an option tag
                                     if ($branch_result->num_rows > 0) {
                                         while ($branch = $branch_result->fetch_assoc()) {
-                                            echo '<option value="' . $branch['branch_name   '] . '">' . $branch['branch_name'] . '</option>';
+                                            echo '<option value="' . $branch['branch_name'] . '">' . $branch['branch_name'] . '</option>';
                                         }
                                     } else {
                                         echo '<option value="">No branches available</option>';

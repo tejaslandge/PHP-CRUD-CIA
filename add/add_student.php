@@ -58,13 +58,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$course_name', '$date_of_birth', '$gender', '$address', '$city', '$state', '$postal_code', '$enrollment_date', '$guardian_name', '$guardian_contact', '$fees_paid', '$total_fees', '$balance_fees', '$profile_picture', '$remarks')";
 
     if (mysqli_query($conn, $sql)) {
-        echo "<div class='alert alert-success'>Student added successfully!</div>";
         if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
             logActivity($_SESSION['user_id'], $_SESSION['username'], "Add data of Student:$first_name $last_name");
         }
+        $_SESSION['addstd']= "<div class='alert alert-success'>Student added successfully!</div>";
         header("location:../superadmin/students.php");
     } else {
-        echo "<div class='alert alert-danger'>Error: " . mysqli_error($conn) . "</div>";
+        $_SESSION['addstd']= "<div class='alert alert-danger'>Error: " . mysqli_error($conn) . "</div>";
     }
 }
 

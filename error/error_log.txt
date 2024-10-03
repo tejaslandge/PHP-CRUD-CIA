@@ -4,3 +4,16 @@ Error : 2 ,Error Message : Undefined array key "succmsg",Error_file:C:\xampp\htd
 Error : 2 ,Error Message : Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\PHP-CRUD-CIA\includes\header.php:1),Error_file:C:\xampp\htdocs\PHP-CRUD-CIA\add\add_task.php ,Error_line : 44
 Error : 2 ,Error Message : Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\PHP-CRUD-CIA\includes\header.php:1),Error_file:C:\xampp\htdocs\PHP-CRUD-CIA\add\add_task.php ,Error_line : 48
 Error : 2 ,Error Message : Undefined variable $task_name,Error_file:C:\xampp\htdocs\PHP-CRUD-CIA\superadmin\task_sheet.php ,Error_line : 80
+Error : 2 ,Error Message : Undefined array key "branch_name   ",Error_file:C:\xampp\htdocs\PHP-CRUD-CIA\add\add_trainer.php ,Error_line : 247
+Error : 2 ,Error Message : Undefined array key "branch_name   ",Error_file:C:\xampp\htdocs\PHP-CRUD-CIA\add\add_trainer.php ,Error_line : 247
+Error : 2 ,Error Message : Undefined array key "branch_name   ",Error_file:C:\xampp\htdocs\PHP-CRUD-CIA\add\add_trainer.php ,Error_line : 247
+Error : 2 ,Error Message : Undefined array key "branch_name   ",Error_file:C:\xampp\htdocs\PHP-CRUD-CIA\add\add_trainer.php ,Error_line : 247
+Error : 2 ,Error Message : Undefined array key "branch_name   ",Error_file:C:\xampp\htdocs\PHP-CRUD-CIA\add\add_trainer.php ,Error_line : 247
+Error : 2 ,Error Message : Undefined array key "branch_name   ",Error_file:C:\xampp\htdocs\PHP-CRUD-CIA\add\add_trainer.php ,Error_line : 247
+Error : 2 ,Error Message : Undefined array key "branch_name   ",Error_file:C:\xampp\htdocs\PHP-CRUD-CIA\add\add_trainer.php ,Error_line : 247
+Error : 2 ,Error Message : Undefined array key "branch_name   ",Error_file:C:\xampp\htdocs\PHP-CRUD-CIA\add\add_trainer.php ,Error_line : 247
+Error : 2 ,Error Message : Undefined array key "branch_name   ",Error_file:C:\xampp\htdocs\PHP-CRUD-CIA\add\add_trainer.php ,Error_line : 247
+Error : 2 ,Error Message : Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\PHP-CRUD-CIA\includes\header.php:1),Error_file:C:\xampp\htdocs\PHP-CRUD-CIA\add\add_task.php ,Error_line : 48
+Error : 2 ,Error Message : Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\PHP-CRUD-CIA\includes\header.php:1),Error_file:C:\xampp\htdocs\PHP-CRUD-CIA\add\add_task.php ,Error_line : 49
+Error : 2 ,Error Message : Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\PHP-CRUD-CIA\includes\header.php:1),Error_file:C:\xampp\htdocs\PHP-CRUD-CIA\add\add_task.php ,Error_line : 49
+Error : 2 ,Error Message : Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\PHP-CRUD-CIA\includes\header.php:1),Error_file:C:\xampp\htdocs\PHP-CRUD-CIA\add\add_task.php ,Error_line : 49

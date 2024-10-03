@@ -188,44 +188,7 @@ set_error_handler(callback: "error_display");
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Additional content -->
-            <div class="row">
-                <div class="col-md-12">
-                    <h2>Recent Activity</h2>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Activity</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Student John Doe enrolled in "Web Development"</td>
-                                <td>2024-09-15</td>
-                                <td><span class="badge bg-success">Completed</span></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Course "Python for Beginners" updated</td>
-                                <td>2024-09-14</td>
-                                <td><span class="badge bg-warning">In Progress</span></td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Fee submission deadline for "Data Science" extended</td>
-                                <td>2024-09-13</td>
-                                <td><span class="badge bg-danger">Pending</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            </div>            
         </main>
     </div>
 </div>

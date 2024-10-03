@@ -24,9 +24,11 @@ if (isset($_GET['id'])) {
         if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
             logActivity($_SESSION['user_id'], $_SESSION['username'], "Deleted trainer record");
         }
+        $_SESSION['deltrainer']= "<div class='alert alert-success'>Deleted Trainer details successfully!</div>";
+
         header('Location: ../superadmin/trainers.php?msg=Trainer deleted successfully');
     } else {
-        echo "Error deleting trainer: " . $stmt->error;
+        $_SESSION['deltrainer']= "<div class='alert alert-danger'>Error deleting trainer:  " . $stmt->error ."</div>";
     }
 } else {
     echo "No trainer selected.";

@@ -16,10 +16,12 @@ if (isset($_GET['task_id'])) {
         if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
             logActivity($_SESSION['user_id'], $_SESSION['username'], "Delete Task");
         }
+        $_SESSION['deltask']= "<div class='alert alert-success'>Deleted Task Successfully!</div>";
+
         header("Location:../superadmin/task_sheet.php");
         exit;
     } else {
-        echo "Error deleting task.";
+    $_SESSION['deltask']="<div class='alert alert-danger'>Error deleting task.</div>";
     }
 }
 ?>

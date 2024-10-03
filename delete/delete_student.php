@@ -14,9 +14,11 @@ if (isset($_GET['id'])) {
         if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
             logActivity($_SESSION['user_id'], $_SESSION['username'], "Delete student record");
         }
+        $_SESSION['delstd']="<div class='alert alert-success'>Delete Student Details successfully!</div>";
         header('Location: ../superadmin/students.php');
     } else {
-        echo "Error deleting student: " . mysqli_error($conn);
+
+        $_SESSION['delstd']= "<div class='alert alert-danger'>Error deleting student: " . mysqli_error($conn)."</div>";
     }
 } else {
     echo "No student selected.";

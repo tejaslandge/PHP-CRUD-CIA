@@ -67,6 +67,18 @@ set_error_handler("error_display");
 
         <!-- Main content -->
         <main class="col-12 col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <?php if (isset($_SESSION['addtrainer'])): ?>
+                <?php echo $_SESSION['addtrainer']; ?>
+                <?php unset($_SESSION['addtrainer']); ?>
+            <?php endif; ?>
+            <?php if (isset($_SESSION['edittrainer'])): ?>
+                <?php echo $_SESSION['edittrainer']; ?>
+                <?php unset($_SESSION['edittrainer']); ?>
+            <?php endif; ?>
+            <?php if (isset($_SESSION['deltrainer'])): ?>
+                <?php echo $_SESSION['deltrainer']; ?>
+                <?php unset($_SESSION['deltrainer']); ?>
+            <?php endif; ?>
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Trainers</h1>
 

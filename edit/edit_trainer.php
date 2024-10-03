@@ -150,11 +150,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
             logActivity($_SESSION['user_id'], $_SESSION['username'], "Updated trainer: $first_name $last_name");
         }
+        $_SESSION['edittrainer']= "<div class='alert alert-success'>Updated Trainer details successfully!</div>";
+
         // Redirect to trainers page
         header("Location: ../superadmin/trainers.php");
         exit();
     } else {
-        echo "Error updating trainer: " . $stmt_update->error;
+        $_SESSION['edittrainer']= "<div class='alert alert-danger'>Error updating trainer: " . $stmt_update->error."</div>";
     }
 }
 ?>

@@ -37,11 +37,11 @@ set_error_handler(callback: "error_display");
                 <h1 class="h2">Feedbacks</h1>
             </div>
 
-            <!-- Dashboard Stats -->
-            <div class="row">
-                <h1> All Feedbacks</h1>
-            
-            </div>
+            <iframe height="450px" width="100%"
+        src=""
+        allowfullscreen>
+    </iframe>
+    
         </main>
     </div>
 </div>

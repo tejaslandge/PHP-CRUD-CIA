@@ -74,7 +74,7 @@ if (isset($_GET['id'])) {
                 if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
                     logActivity($_SESSION['user_id'], $_SESSION['username'], "Edit data of Branch");
                 }
-                $_SESSION['success_message'] = "Branch updated successfully!";
+                $_SESSION['editbranch'] = "<div class='alert alert-success'>Branch updated successfully!</div>";
                 header("Location: ../superadmin/branches.php");
                 exit;
             } else {

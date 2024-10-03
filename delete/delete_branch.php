@@ -27,12 +27,13 @@ if (isset($_GET['id'])) {
 
     // Try executing the query
     if ($stmt->execute()) {
+        $_SESSION['delbranch']="<div class='alert alert-success'>Delete Branch successfully!</div>";
         // If successfully deleted, redirect to the branches page with a success message
         header("Location: ../superadmin/branches.php?message=Branch successfully deleted");
         exit();
     } else {
         // If there's an error, display an error message
-        echo "Error deleting branch: " . $conn->error;
+        $_SESSION['delbranch']= "Error deleting branch: " . $conn->error;
     }
 
     // Close the prepared statement

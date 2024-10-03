@@ -27,6 +27,7 @@ function error_display($errno, $errstr, $errfile, $errline)
 set_error_handler(callback: "error_display");
 ?>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <!-- Dashboard Container -->
 <div class="container-fluid">
@@ -37,9 +38,21 @@ set_error_handler(callback: "error_display");
         </nav>
         <!-- Main content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <?php if (isset($_SESSION['addtask'])): ?>
+                <?php echo $_SESSION['addtask']; ?>
+                <?php unset($_SESSION['addtask']); ?>
+            <?php endif; ?>
+            <?php if (isset($_SESSION['edittask'])): ?>
+                <?php echo $_SESSION['edittask']; ?>
+                <?php unset($_SESSION['edittask']); ?>
+            <?php endif; ?>
+            <?php if (isset($_SESSION['deltask'])): ?>
+                <?php echo $_SESSION['deltask']; ?>
+                <?php unset($_SESSION['deltask']); ?>
+            <?php endif; ?>
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h2 class="mb-0">Task List</h2>
-                <a href="../add/add_task.php" class="btn btn-primary">Add New Task</a>
+                <a href="../add/add_task.php" class="btn btn-primary"><i class="fas fa-plus"></i> Add New Task</a>
             </div>
 
             <!-- Dashboard Stats -->
@@ -75,9 +88,9 @@ set_error_handler(callback: "error_display");
                                     <td>{$row['priority_level']}</td>
                                     <td>{$row['remarks']}</td>
                                     <td>
-                                        <a href='../superadmin/view_task.php?task_id={$row['task_id']}' class='btn btn-info btn-sm'>View</a>
-                                        <a href='../edit/edit_task.php?task_id={$row['task_id']}' class='btn btn-warning btn-sm'>Edit</a>
-                                        <a href='../delete/delete_task.php?task_id={$row['task_id']}' class='btn btn-danger btn-sm' onclick='return confirm(\"Are you sure you want to delete {$row['task_name']} task?\");'>Delete</a>
+                                        <a href='../superadmin/view_task.php?task_id={$row['task_id']}' class='btn btn-info btn-sm'><i class='fas fa-eye'></i></a>
+                                        <a href='../edit/edit_task.php?task_id={$row['task_id']}' class='btn btn-warning btn-sm'><i class='fas fa-edit'></i></a>
+                                        <a href='../delete/delete_task.php?task_id={$row['task_id']}' class='btn btn-danger btn-sm' onclick='return confirm(\"Are you sure you want to delete {$row['task_name']} task?\");'><i class='fas fa-trash'></i></a>
                                     </td>
                                   </tr>";
                             }
